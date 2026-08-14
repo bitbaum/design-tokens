@@ -1,6 +1,6 @@
 {
   "name": "@fleet/design-tokens",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Design SSOT for OrangeCat, FleetCrown and Solon — tokens, self-hosted faces, and the Tailwind preset that maps them.",
   "license": "MIT",
   "repository": {
