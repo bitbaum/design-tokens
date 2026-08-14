@@ -220,6 +220,10 @@ body {
   font-family: var(--font-display);
   font-weight: var(--font-display-weight);
   letter-spacing: var(--tracking-display);
+  /* Balance the line lengths so a headline never strands its last word alone on
+     a second line. Browsers cap this at a few lines, which is exactly the range
+     a display heading occupies; longer running text is unaffected. */
+  text-wrap: balance;
 }
 
 /**
