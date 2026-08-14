@@ -162,6 +162,35 @@
   --tracking-label: 0.1em;
   --tracking-caps: 0.16em;
 
+  /**
+   * — Vertical rhythm ————————————————————————————————————————————————————
+   * Pace is one decision, not a `py-20 sm:py-28` guess repeated on every
+   * section — that is how a page ends up with six slightly different rhythms.
+   * Fluid, so spacing that reads as generous at 1440 does not strand a phone
+   * with half a screen of emptiness.
+   */
+  --section-py: clamp(5rem, 9vw, 9rem);
+  --section-py-tight: clamp(3.5rem, 6vw, 6rem);
+
+  /**
+   * — Display scale ——————————————————————————————————————————————————————
+   * Fluid for the same reason: one confident size that resolves itself per
+   * viewport, rather than three breakpoint variants per heading. Note that
+   * display-3 bottoms out at 1.5rem — exactly the display face's size floor,
+   * so every step of this scale is safe to set in the display face.
+   */
+  --text-display-1: clamp(2.75rem, 5.4vw, 4.5rem);
+  --text-display-2: clamp(2rem, 3.4vw, 3rem);
+  --text-display-3: clamp(1.5rem, 2vw, 1.875rem);
+
+  /**
+   * — Measures for running text ——————————————————————————————————————————
+   * Headlines take their width from the column they sit in; a hero h1 with its
+   * own max-width as well ends up with two rules where only one ever binds.
+   */
+  --measure-lede: 46ch;
+  --measure-copy: 68ch;
+
   /* ════════════════════════════════════════════════════════════════════════
      ▲▲▲  END KNOBS  ▲▲▲
      ════════════════════════════════════════════════════════════════════════ */
