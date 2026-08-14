@@ -194,6 +194,29 @@ body {
 }
 
 /**
+ * SIZE FLOOR — the display face is for DISPLAY sizes only: 1.5rem (24px) and up.
+ *
+ * Instrument Serif is high-contrast: its thin strokes thin out further as the
+ * type shrinks, so an 18px serif heading reads LIGHTER than the 16px sans
+ * paragraph beneath it and the hierarchy silently inverts. Below the floor,
+ * headings use the sans at 600. Each repo's design gate enforces this by
+ * rejecting `font-display` next to text-xs/sm/base/lg/xl.
+ */
+
+/**
+ * The wordmark. A high-contrast serif goes weak at small sizes in mixed case,
+ * but holds up in uppercase with open tracking — which is exactly what a
+ * wordmark is. This is the ONLY sanctioned use of the display face below the
+ * size floor described above.
+ */
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--font-display-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/**
  * Numbers that sit in columns or change in place — tallies, balances, counts.
  * Tabular figures stop the layout jittering as values update.
  */
