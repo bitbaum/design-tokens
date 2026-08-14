@@ -35,6 +35,8 @@ module.exports = {
           base: withAlpha("--surface-base"),
           raised: withAlpha("--surface-raised"),
           overlay: withAlpha("--surface-overlay"),
+          modal: withAlpha("--surface-modal"),
+          drawer: withAlpha("--surface-drawer"),
           hover: withAlpha("--surface-hover"),
         },
         border: {
@@ -48,6 +50,8 @@ module.exports = {
         accent: {
           DEFAULT: "var(--public-accent)",
           hover: "var(--accent-hover)",
+          muted: "hsl(var(--accent-muted))",
+          text: "hsl(var(--accent-text))",
         },
         // Bitcoin's own orange — means "this is Bitcoin", never an action.
         bitcoin: "var(--bitcoin-orange)",
@@ -55,6 +59,12 @@ module.exports = {
           positive: withAlpha("--status-positive"),
           warning: withAlpha("--status-warning"),
           negative: withAlpha("--status-negative"),
+          neutral: withAlpha("--status-neutral"),
+          // The -subtle tokens already carry their own alpha, so they are used
+          // as-is rather than through withAlpha.
+          "positive-subtle": "hsl(var(--status-positive-subtle))",
+          "warning-subtle": "hsl(var(--status-warning-subtle))",
+          "negative-subtle": "hsl(var(--status-negative-subtle))",
         },
       },
       fontFamily: {
