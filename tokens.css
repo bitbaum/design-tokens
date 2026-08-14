@@ -1,0 +1,288 @@
+/**
+ * @fleet/design-tokens — the design SSOT for OrangeCat, FleetCrown and Solon.
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │  TO RETHEME THE ENTIRE STACK, EDIT THE "KNOBS" BLOCK BELOW AND NOTHING   │
+ * │  ELSE. Then tag a release and bump the dependency in the three apps.     │
+ * └──────────────────────────────────────────────────────────────────────────┘
+ *
+ * Why this package exists: the same tokens used to be hand-copied into three
+ * repos. They drifted — Solon's globals.css carried a comment claiming it
+ * matched OrangeCat while sharing zero values with it, and the three products
+ * looked like three companies. Copies drift; imports cannot.
+ *
+ * Rules for consumers:
+ *   - Components use ROLES (.font-display, bg-surface-base, text-fg-secondary).
+ *     They never name a typeface, a weight, or a hex value.
+ *   - A face's required weight and tracking are declared HERE, next to the face,
+ *     so swapping a single-weight display serif for a variable grotesque is one
+ *     edit and zero component changes.
+ *   - Colours are HSL channel triplets so Tailwind composes alpha:
+ *     `hsl(var(--surface-raised) / 0.5)` via `bg-surface-raised/50`.
+ */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FACES — self-hosted, latin + latin-ext. No external requests at runtime.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Instrument Serif — display. SINGLE WEIGHT (400): there is no bold. Asking for
+   700 makes the browser synthesize a fake bold, which looks cheap; that is why
+   --font-display-weight exists and why components must not set a weight. */
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./fonts/instrument-serif-latin.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./fonts/instrument-serif-latin-ext.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./fonts/instrument-serif-italic-latin.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Inter — UI/body. Variable 400–700. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(./fonts/inter-latin.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(./fonts/inter-latin-ext.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* IBM Plex Mono — load-bearing strings: Bitcoin addresses, signatures, hashes,
+   tallies. A hash must look identical on all three sites. */
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./fonts/plex-mono-400-latin.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./fonts/plex-mono-500-latin.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* ════════════════════════════════════════════════════════════════════════
+     ▼▼▼  THE KNOBS  ▼▼▼   Everything below this line is derived from these.
+     ════════════════════════════════════════════════════════════════════════ */
+
+  /* — Typeface roles. Swap a face here and the whole stack changes. ——————— */
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* The weight and tracking the DISPLAY FACE needs. These belong to the face,
+     not to the component — that is what makes a face swap a one-line change.
+     Instrument Serif has one weight (400) and, being a high-contrast serif,
+     wants far less negative tracking than a grotesque does. */
+  --font-display-weight: 400;
+  --tracking-display: -0.015em;
+
+  /* — The one action colour across all three products. ————————————————— */
+  --public-accent: #ff5c00;
+  --accent-hover: #ff7a33;
+
+  /* — Surfaces, darkest (public) to lightest (overlay). ————————————————— */
+  --surface-public: 0 0% 4%;
+  --surface-page: 0 0% 7%;
+  --surface-base: 0 0% 11%;
+  --surface-raised: 0 0% 14%;
+  --surface-overlay: 0 0% 17%;
+  --surface-hover: 0 0% 13%;
+
+  /* — Text ramp ————————————————————————————————————————————————————————— */
+  --text-primary: 0 0% 92%;
+  --text-secondary: 0 0% 65%;
+  --text-tertiary: 0 0% 48%;
+  --text-muted: 0 0% 32%;
+  --text-inverted: 0 0% 10%;
+
+  /* — Borders ——————————————————————————————————————————————————————————— */
+  --border-subtle: 0 0% 13%;
+  --border-default: 0 0% 20%;
+  --border-strong: 0 0% 24%;
+  --border-interactive: 0 0% 60%;
+
+  /* — Status ————————————————————————————————————————————————————————————— */
+  --status-positive: 145 55% 50%;
+  --status-warning: 38 92% 60%;
+  --status-negative: 0 75% 60%;
+
+  /* — Geometry —————————————————————————————————————————————————————————— */
+  --radius-control: 0.375rem;
+  --radius-surface: 0.5rem;
+  --radius-pill: 9999px;
+  --shell-max: 80rem;
+  --public-nav-height: 76px;
+
+  /* — Secondary tracking roles —————————————————————————————————————————— */
+  --tracking-label: 0.1em;
+  --tracking-caps: 0.16em;
+
+  /* ════════════════════════════════════════════════════════════════════════
+     ▲▲▲  END KNOBS  ▲▲▲
+     ════════════════════════════════════════════════════════════════════════ */
+
+  /* Bitcoin's own orange. Not a brand colour — it means "this is Bitcoin", so
+     it is deliberately NOT --public-accent and must not be used for actions. */
+  --bitcoin-orange: #f7931a;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SHARED PRIMITIVES — the chrome all three products present.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+body {
+  color: hsl(var(--text-primary));
+  background: hsl(var(--surface-page));
+  font-family: var(--font-sans);
+}
+
+/**
+ * The display treatment. Owns family + weight + tracking together so that a
+ * component only ever declares INTENT ("this is display type"), never the
+ * mechanics. Do not add font-bold/tracking-* alongside this class: the current
+ * face has no bold, and a synthesized one looks cheap.
+ */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: var(--font-display-weight);
+  letter-spacing: var(--tracking-display);
+}
+
+/**
+ * Numbers that sit in columns or change in place — tallies, balances, counts.
+ * Tabular figures stop the layout jittering as values update.
+ */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/**
+ * Section rhythm. Marketing sections are full-bleed and own their inner
+ * container — a root layout must NOT wrap pages in one, or every hero renders
+ * as a box floating in a gutter instead of reaching the edges of the screen.
+ */
+.section-shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--shell-max);
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .section-shell {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-shell {
+    padding-inline: 2rem;
+  }
+}
+
+/** One accent glow and a masked grid over the near-black public surface. */
+.public-backdrop {
+  position: relative;
+  isolation: isolate;
+  background: hsl(var(--surface-public));
+  --public-glow-accent: rgb(255 92 0 / 0.1);
+  --public-grid-stroke: rgb(255 255 255 / 0.04);
+  --public-grid-size: 80px;
+}
+
+.public-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    60rem 30rem at 50% -10%,
+    var(--public-glow-accent),
+    transparent 70%
+  );
+}
+
+.public-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: linear-gradient(
+      to right,
+      var(--public-grid-stroke) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, var(--public-grid-stroke) 1px, transparent 1px);
+  background-size: var(--public-grid-size) var(--public-grid-size);
+  mask-image: radial-gradient(closest-side at 50% 35%, black, transparent);
+}
+
+/** The eyebrow pill that opens a marketing page on all three products. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid hsl(var(--border-default));
+  background: hsl(var(--surface-base));
+  padding: 0.375rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: hsl(var(--text-secondary));
+}
+
+.eyebrow::before {
+  content: "";
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: var(--radius-pill);
+  background: var(--public-accent);
+}
