@@ -62,6 +62,8 @@ Components declare **intent**, never mechanics.
 | `className="bg-surface-base"` | `bg-[#1c1c1c]` | retheming must not require finding hex codes |
 | `className="text-accent"` | `text-[#ff5c00]` | one action colour, one definition |
 | `className="tabular"` | — | numbers that change in place must not jitter |
+| `font-display` at ≥`text-2xl` | `font-display text-lg` | below 24px the high-contrast serif reads *lighter* than the body sans and hierarchy inverts |
+| `className="wordmark"` | `font-display` on the logo | uppercase + open tracking is the one small size a display serif survives |
 
 Enforce it in each repo's design gate so drift fails the build rather than
 shipping quietly.
