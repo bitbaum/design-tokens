@@ -1,0 +1,83 @@
+/**
+ * @fleet/design-tokens — Tailwind v3 preset.
+ *
+ * Maps utility names onto the CSS custom properties defined in tokens.css.
+ * Every value here resolves to a var — never a literal. That is the whole
+ * point: retheming edits tokens.css, and nothing in any app changes.
+ *
+ * Usage (tailwind.config.js):
+ *   module.exports = {
+ *     presets: [require('@fleet/design-tokens/tailwind-preset')],
+ *     content: [...],
+ *   }
+ *
+ * Tailwind v4 apps (FleetCrown) consume tokens.css directly via @theme instead;
+ * the variable names are identical, so the two paths stay in sync.
+ */
+
+// HSL channel triplets, so `bg-surface-raised/50` composes alpha correctly.
+const withAlpha = (token) => `hsl(var(${token}) / <alpha-value>)`;
+
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        fg: {
+          primary: withAlpha("--text-primary"),
+          secondary: withAlpha("--text-secondary"),
+          tertiary: withAlpha("--text-tertiary"),
+          muted: withAlpha("--text-muted"),
+          inverted: withAlpha("--text-inverted"),
+        },
+        surface: {
+          public: withAlpha("--surface-public"),
+          page: withAlpha("--surface-page"),
+          base: withAlpha("--surface-base"),
+          raised: withAlpha("--surface-raised"),
+          overlay: withAlpha("--surface-overlay"),
+          hover: withAlpha("--surface-hover"),
+        },
+        border: {
+          subtle: withAlpha("--border-subtle"),
+          DEFAULT: withAlpha("--border-default"),
+          strong: withAlpha("--border-strong"),
+          interactive: withAlpha("--border-interactive"),
+        },
+        // Lets components write `border-default` alongside `border-subtle`.
+        default: withAlpha("--border-default"),
+        accent: {
+          DEFAULT: "var(--public-accent)",
+          hover: "var(--accent-hover)",
+        },
+        // Bitcoin's own orange — means "this is Bitcoin", never an action.
+        bitcoin: "var(--bitcoin-orange)",
+        status: {
+          positive: withAlpha("--status-positive"),
+          warning: withAlpha("--status-warning"),
+          negative: withAlpha("--status-negative"),
+        },
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)"],
+        display: ["var(--font-display)"],
+        mono: ["var(--font-mono)"],
+      },
+      letterSpacing: {
+        display: "var(--tracking-display)",
+        label: "var(--tracking-label)",
+        caps: "var(--tracking-caps)",
+      },
+      borderRadius: {
+        control: "var(--radius-control)",
+        surface: "var(--radius-surface)",
+        pill: "var(--radius-pill)",
+      },
+      maxWidth: {
+        shell: "var(--shell-max)",
+      },
+      spacing: {
+        nav: "var(--public-nav-height)",
+      },
+    },
+  },
+};
