@@ -16,6 +16,10 @@
  */
 
 // HSL channel triplets, so `bg-surface-raised/50` composes alpha correctly.
+/**
+ * @param {string} token CSS custom property name, e.g. `--text-primary`.
+ * @returns {string} Tailwind colour value carrying the alpha placeholder.
+ */
 const withAlpha = (token) => `hsl(var(${token}) / <alpha-value>)`;
 
 module.exports = {
