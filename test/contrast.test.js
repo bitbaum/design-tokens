@@ -20,16 +20,24 @@ const path = require('node:path')
 
 const css = fs.readFileSync(path.join(__dirname, '..', 'tokens.css'), 'utf8')
 
-/** The first definition of a custom property, as written. */
+/**
+ * The first definition of a custom property, as written.
+ * @param {string} name
+ * @returns {string}
+ */
 function tokenValue(name) {
   const m = css.match(new RegExp(`${name}\\s*:\\s*([^;]+);`))
   assert.ok(m, `${name} is not defined in tokens.css`)
   return m[1].trim()
 }
 
-/** `0 0% 8%` (an HSL triple, as shadcn-style tokens are stored) → sRGB. */
+/**
+ * `0 0% 8%` (an HSL triple, as shadcn-style tokens are stored) → sRGB.
+ * @param {string} triple
+ * @returns {number[]}
+ */
 function hslTripleToRgb(triple) {
-  const [h, s, l] = triple.split(/\s+/).map((p) => parseFloat(p))
+  const [h, s, l] = triple.split(/\s+/).map((/** @type {string} */ p) => parseFloat(p))
   const S = s / 100
   const L = l / 100
   const c = (1 - Math.abs(2 * L - 1)) * S
@@ -41,19 +49,32 @@ function hslTripleToRgb(triple) {
   return [(r + m) * 255, (g + m) * 255, (b + m) * 255]
 }
 
+/**
+ * @param {string} hex
+ * @returns {number[]}
+ */
 function hexToRgb(hex) {
   const h = hex.replace('#', '')
   return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16))
 }
 
+/**
+ * @param {number[]} rgb
+ * @returns {number}
+ */
 function luminance(rgb) {
-  const [r, g, b] = rgb.map((v) => {
+  const [r, g, b] = rgb.map((/** @type {number} */ v) => {
     const s = v / 255
     return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)
   })
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
 
+/**
+ * @param {number[]} a
+ * @param {number[]} b
+ * @returns {number}
+ */
 function ratio(a, b) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x)
   return (hi + 0.05) / (lo + 0.05)
