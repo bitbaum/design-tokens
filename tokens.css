@@ -125,6 +125,25 @@
   --public-accent: #ff5c00;
 
   /**
+   * The label colour for text sitting ON --public-accent.
+   *
+   * White on #ff5c00 is 3.10:1 — below the 4.5 AA floor — so every primary
+   * CTA in the fleet was failing at once: Solon's "Open the Dashboard",
+   * OrangeCat's "Get Started", FleetCrown's "Launch agent". Measured, not
+   * guessed. Near-black on the same orange is 6.10:1.
+   *
+   * The orange is deliberately NOT darkened to rescue white text: it would
+   * have to reach #c74600 to clear the floor, and that is a duller, muddier
+   * colour. The accent IS the brand; the label is what gives way.
+   *
+   * Theme-independent for the same reason --public-accent is. The accent does
+   * not flip between themes, so a label that flipped with the theme would be
+   * unreadable in one of them — which is exactly why no existing text token
+   * could be reused here (--text-primary inverts, this must not).
+   */
+  --on-accent: 0 0% 8%;
+
+  /**
    * — The marketing band ——————————————————————————————————————————————————
    * Always near-black, in BOTH themes, so a CTA reads the same regardless of
    * the surrounding app theme. Deliberately not part of the ramp below.

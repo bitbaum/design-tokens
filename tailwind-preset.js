@@ -57,6 +57,11 @@ module.exports = {
           muted: "hsl(var(--accent-muted))",
           text: "hsl(var(--accent-text))",
         },
+        // The label colour for text ON the accent. `bg-accent text-white` is
+        // 3.10:1 and fails AA; `bg-accent text-on-accent` is 6.10:1. Paired
+        // with the background it belongs to so nobody has to remember which
+        // ink an orange button takes.
+        "on-accent": withAlpha("--on-accent"),
         // Bitcoin's own orange — means "this is Bitcoin", never an action.
         bitcoin: "var(--bitcoin-orange)",
         status: {
