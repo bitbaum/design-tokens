@@ -61,6 +61,7 @@ Components declare **intent**, never mechanics.
 | `className="font-display"` | `font-display font-bold` | the display face has **one weight**; a synthesized bold looks cheap |
 | `className="bg-surface-base"` | `bg-[#1c1c1c]` | retheming must not require finding hex codes |
 | `className="text-accent"` | `text-[#ff5c00]` | one action colour, one definition |
+| `bg-accent text-on-accent` | `bg-accent text-white` | white on the accent is **3.10:1** and fails AA; the paired ink is 6.10:1 |
 | `className="tabular"` | — | numbers that change in place must not jitter |
 | `font-display` at ≥`text-2xl` | `font-display text-lg` | below 24px the high-contrast serif reads *lighter* than the body sans and hierarchy inverts |
 | `className="wordmark"` | `font-display` on the logo | uppercase + open tracking is the one small size a display serif survives |
