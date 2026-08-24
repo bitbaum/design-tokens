@@ -1,1 +1,4 @@
 node_modules/
+
+# Per-session agent worktrees — scratch, never part of the repo.
+.claude/worktrees/
