@@ -2,7 +2,7 @@
 # kind — while being the design SSOT that OrangeCat, FleetCrown and Solon all
 # consume. A change here reaches every one of them, and nothing checked it.
 #
-# One job, one command. `npm run verify` is defined once in package.json and
+# One job, one command. `pnpm run verify` is defined once in package.json and
 # called here verbatim, so "green locally" and "green in CI" cannot mean two
 # different things. Do not re-inline the gates: a hand-copied gate list is how
 # botsmann silently lost its typecheck.
@@ -25,11 +25,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # pnpm version comes from "packageManager" in package.json (SSOT);
+      # pnpm/action-setup@v6 errors if both are specified.
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
 
-      - run: npm run verify
+      - run: pnpm run verify
