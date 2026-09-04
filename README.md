@@ -16,7 +16,7 @@ three different companies. Copies drift; imports cannot.
 ## Retheming the entire stack
 
 1. Edit the block marked `▼▼▼ THE KNOBS ▼▼▼` in `tokens.css`. Nothing else.
-2. Tag a release: `git tag v0.2.0 && git push --tags`
+2. Tag a release: `git tag v1.2.0 && git push --tags`
 3. Bump `@fleet/design-tokens` in the three apps. Their CI auto-merges.
 
 Changing the display typeface is **one line**:
@@ -31,7 +31,7 @@ Changing the display typeface is **one line**:
 
 ```jsonc
 // package.json
-"@fleet/design-tokens": "github:bitbaum/design-tokens#v0.1.0"
+"@fleet/design-tokens": "github:bitbaum/design-tokens#v1.1.0"
 ```
 
 ```tsx
