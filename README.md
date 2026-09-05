@@ -1,4 +1,4 @@
-# @fleet/design-tokens
+# @bitbaum/design-tokens
 
 The design **single source of truth** for OrangeCat, FleetCrown and Solon.
 
@@ -17,7 +17,7 @@ three different companies. Copies drift; imports cannot.
 
 1. Edit the block marked `▼▼▼ THE KNOBS ▼▼▼` in `tokens.css`. Nothing else.
 2. Tag a release: `git tag v1.2.0 && git push --tags`
-3. Bump `@fleet/design-tokens` in the three apps. Their CI auto-merges.
+3. Bump `@bitbaum/design-tokens` in the three apps. Their CI auto-merges.
 
 Changing the display typeface is **one line**:
 
@@ -31,19 +31,19 @@ Changing the display typeface is **one line**:
 
 ```jsonc
 // package.json
-"@fleet/design-tokens": "github:bitbaum/design-tokens#v1.1.0"
+"@bitbaum/design-tokens": "github:bitbaum/design-tokens#v1.1.0"
 ```
 
 ```tsx
 // app/layout.tsx — import BEFORE the app's own globals.css
-import "@fleet/design-tokens/tokens.css";
+import "@bitbaum/design-tokens/tokens.css";
 import "./globals.css";
 ```
 
 ```js
 // tailwind.config.js (v3)
 module.exports = {
-  presets: [require("@fleet/design-tokens/tailwind-preset")],
+  presets: [require("@bitbaum/design-tokens/tailwind-preset")],
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
 };
 ```

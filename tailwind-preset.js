@@ -1,5 +1,5 @@
 /**
- * @fleet/design-tokens — Tailwind v3 preset.
+ * @bitbaum/design-tokens — Tailwind v3 preset.
  *
  * Maps utility names onto the CSS custom properties defined in tokens.css.
  * Every value here resolves to a var — never a literal. That is the whole
@@ -7,7 +7,7 @@
  *
  * Usage (tailwind.config.js):
  *   module.exports = {
- *     presets: [require('@fleet/design-tokens/tailwind-preset')],
+ *     presets: [require('@bitbaum/design-tokens/tailwind-preset')],
  *     content: [...],
  *   }
  *
