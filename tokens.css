@@ -1,5 +1,5 @@
 /**
- * @bitbaum/design-tokens — the design SSOT for OrangeCat, FleetCrown and Solon.
+ * @bitbaum/design-tokens — the design SSOT for OrangeCat, Loki and Solon.
  *
  * ┌──────────────────────────────────────────────────────────────────────────┐
  * │  TO RETHEME THE ENTIRE STACK, EDIT THE "KNOBS" BLOCK BELOW AND NOTHING   │
@@ -131,7 +131,7 @@
    *
    * White on #ff5c00 is 3.10:1 — below the 4.5 AA floor — so every primary
    * CTA in the fleet was failing at once: Solon's "Open the Dashboard",
-   * OrangeCat's "Get Started", FleetCrown's "Launch agent". Measured, not
+   * OrangeCat's "Get Started", Loki's "Launch agent". Measured, not
    * guessed. Near-black on the same orange is 6.10:1.
    *
    * The orange is deliberately NOT darkened to rescue white text: it would
@@ -155,7 +155,7 @@
   /* ── LIGHT THEME ────────────────────────────────────────────────────────
      :root is light and `.dark` overrides it — the same mechanism OrangeCat
      uses, so an app can toggle themes without translating anything. An app
-     that is dark-only (Solon, FleetCrown's public surface) pins it by putting
+     that is dark-only (Solon, Loki's public surface) pins it by putting
      `class="dark"` on <html> and never removing it. */
 
   /* Surfaces — page < base < raised < overlay < modal < drawer */

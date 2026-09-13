@@ -1,6 +1,6 @@
 # @bitbaum/design-tokens
 
-The design **single source of truth** for OrangeCat, FleetCrown and Solon.
+The design **single source of truth** for OrangeCat, Loki and Solon.
 
 One file — [`tokens.css`](./tokens.css) — defines every colour, typeface, weight,
 tracking, radius and shared primitive the three products use. They import it.

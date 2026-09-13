@@ -4,7 +4,7 @@
  * The accent is the fleet's single action colour, so a label placed on it is
  * placed on it in THREE products at once. White on #ff5c00 is 3.10:1, below
  * the 4.5:1 WCAG AA floor for normal text, and that one pairing put Solon's
- * "Open the Dashboard", OrangeCat's "Get Started" and FleetCrown's "Launch
+ * "Open the Dashboard", OrangeCat's "Get Started" and Loki's "Launch
  * agent" under the floor simultaneously. Nobody noticed for months, because
  * an orange button with a white label looks completely normal.
  *
