@@ -9,7 +9,7 @@
  * tokens.css spells it `--surface-modal-bg` produces no error anywhere: the CSS
  * var is simply undefined, `hsl(var(--surface-modal) / 1)` is an invalid color,
  * and the utility silently renders as nothing in every consuming app. The
- * failure surfaces as "that panel looks wrong on FleetCrown", days later, in a
+ * failure surfaces as "that panel looks wrong on Loki", days later, in a
  * different repo.
  *
  * These tests are deliberately about the SEAM (preset <-> tokens.css <-> package

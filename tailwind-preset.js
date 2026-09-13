@@ -11,7 +11,7 @@
  *     content: [...],
  *   }
  *
- * Tailwind v4 apps (FleetCrown) consume tokens.css directly via @theme instead;
+ * Tailwind v4 apps (Loki) consume tokens.css directly via @theme instead;
  * the variable names are identical, so the two paths stay in sync.
  */
 
