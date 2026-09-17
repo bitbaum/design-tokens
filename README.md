@@ -88,3 +88,9 @@ grotesque convention, where the winner is whoever has the largest design budget.
 A high-contrast serif exits that comparison: it reads institutional rather than
 startup, which is exactly right for a stack whose product is *legitimacy* —
 signed votes, verifiable treasuries, an append-only audit trail.
+
+---
+
+Part of **[bitbaum](https://bitbaum.orangecat.ch)** — AI-native products on open
+infrastructure, built in Zürich. Every package here lists the apps that use it:
+**[which apps use design-tokens](https://bitbaum.orangecat.ch/packages/#design-tokens)**.
