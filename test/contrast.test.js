@@ -129,3 +129,31 @@ test('--on-accent does not flip between themes', () => {
       `declared once, outside any theme block, like --public-accent.`,
   );
 });
+
+test('the map scale reads without colour: luminance rises at every step', () => {
+  // Viridis is chosen because it survives every colour-vision deficiency, and
+  // it does so because lightness alone orders it. A step swapped for a
+  // "nicer" hue that breaks the order makes the map lie to a reader who cannot
+  // tell hues apart.
+  const steps = [1, 2, 3, 4, 5, 6, 7].map((i) =>
+    luminance(hexToRgb(tokenValue(`--map-scale-${i}`))),
+  );
+  for (let i = 1; i < steps.length; i++) {
+    assert.ok(
+      steps[i] > steps[i - 1],
+      `--map-scale-${i + 1} is not lighter than --map-scale-${i}; the scale must be monotone in luminance`,
+    );
+  }
+});
+
+test('the darkest map step stands off the dark page', () => {
+  const dark = css.slice(css.indexOf('.dark {'));
+  const match = /--surface-page\s*:\s*([^;]+);/.exec(dark);
+  assert.ok(match, '--surface-page is not defined in the dark theme');
+  const page = hslTripleToRgb(match[1].trim());
+  const r = ratio(hexToRgb(tokenValue('--map-scale-1')), page);
+  assert.ok(
+    r >= 1.5,
+    `--map-scale-1 is ${r.toFixed(2)}:1 on the dark page; an area would vanish into it`,
+  );
+});
