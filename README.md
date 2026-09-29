@@ -94,3 +94,14 @@ signed votes, verifiable treasuries, an append-only audit trail.
 Part of **[bitbaum](https://bitbaum.orangecat.ch)** — AI-native products on open
 infrastructure, built in Zürich. Every package here lists the apps that use it:
 **[which apps use design-tokens](https://bitbaum.orangecat.ch/packages/#design-tokens)**.
+
+## Data maps
+
+`--map-scale-1` … `--map-scale-7` are the one sequential scale for every
+choropleth (viridis, dark to light; hex, so an SVG `fill` takes them as is).
+Luminance rises at every step, so the scale survives colour-vision deficiency
+and greyscale; `test/contrast.test.js` keeps it that way. `--map-no-data` and
+`--map-boundary` follow the theme. An area more than one authority claims is
+**hatched**, never given a colour of its own: lines of `--map-hatch-width`
+every `--map-hatch-gap` at `--map-hatch-angle`, in the text colour. Colour is
+never the only carrier: every map has a list and a legend.
