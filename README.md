@@ -103,9 +103,11 @@ and reduced-motion support. Apps own typography, colours, spacing adjustments,
 components and their content. Do **not** render all information as cards: the
 grammar deliberately offers whitespace and hairline lists.
 
-**Release note:** the `composition.css` subpath is available only from a
-version or commit that contains it. The existing `v1.1.0` tag does not include
-this file; publish/tag a new version and upgrade consumers before importing it.
+**Release note:** this source tree is prepared as `1.2.0`, but changing the
+manifest does not publish it. The existing `v1.1.0` tag does not contain
+`composition.css`. Until the `v1.2.0` Git tag and/or npm package are actually
+published, consumers must pin an **exact commit SHA** that includes the
+stylesheet. Never import this subpath from a consumer pinned to `v1.1.0`.
 No existing importer of `tokens.css` changes behaviour because of this addition.
 
 ## The contract
