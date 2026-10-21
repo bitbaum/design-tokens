@@ -1,0 +1,91 @@
+name: Tag approved design release
+
+# A release request is intentional and version-specific. A successful CI run
+# is evidence, not permission to tag any arbitrary future manifest version.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions: {}
+
+concurrency:
+  group: approved-design-release
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Tag after passing main CI
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Verify approved version, verified SHA and tag absence
+        id: approval
+        env:
+          VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          requested="$(tr -d '\r\n' < .github/release-request.txt)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+          if [ "$version" != "$requested" ]; then
+            echo "No release requested for $version (request is $requested)."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Only the exact latest green main SHA can be released.
+          git fetch origin main --depth=1
+          head="$(git rev-parse origin/main)"
+          if [ "$head" != "$VERIFIED_SHA" ]; then
+            echo "Newer main exists; wait for CI on that SHA."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null 2>&1; then
+            echo "v$version is already tagged, never move an existing tag."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "release=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create immutable release tag
+        if: steps.approval.outputs.release == 'true'
+        env:
+          VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
+          VERSION: ${{ steps.approval.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag -a "v$VERSION" -m "Verified design-tokens v$VERSION" "$VERIFIED_SHA"
+          git push origin "refs/tags/v$VERSION"
+
+      # GITHUB_TOKEN-created tag pushes do NOT trigger another workflow. An
+      # explicit workflow_dispatch does; publish.yml retains its own gated
+      # NPM_PUBLISHING variable and will never bypass npm trusted publishing.
+      - name: Dispatch publication workflow for the tag
+        if: steps.approval.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.approval.outputs.version }}
+        shell: bash
+        run: |
+          gh workflow run publish.yml --ref "v$VERSION"
+          echo "Created v$VERSION and dispatched guarded publication." >> "$GITHUB_STEP_SUMMARY"
