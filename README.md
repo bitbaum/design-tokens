@@ -51,6 +51,63 @@ module.exports = {
 Tailwind v4 apps consume `tokens.css` through `@theme`; the variable names are
 identical, so both paths stay in sync.
 
+## Optional cross-product composition grammar
+
+The **brand tokens** above intentionally belong to OrangeCat/Loki/Solon.
+Their shared palette should never be imposed on unrelated products or
+customer websites.
+
+For spacing, control sizing, visual rhythm and interaction *decisions*,
+`composition.css` is an opt-in, namespaced layer. It defines no fonts, brand
+colours, body style or global reset.
+
+```tsx
+// App Router — any React app may opt into the grammar without its brand skin
+import '@bitbaum/design-tokens/composition.css';
+import './globals.css';
+```
+
+```tsx
+<main className="bb-frame">
+  <div className="bb-stack" style={{ '--bb-stack-gap': '1.5rem' }}>
+    <div className="bb-measure">A product-specific headline and description</div>
+    <div className="bb-actions">
+      <a className="bb-button bb-button--primary" href="/start">Get started</a>
+      <a className="bb-button bb-button--secondary" href="/method">Read the method</a>
+    </div>
+  </div>
+</main>
+```
+
+Map only the small seam of **semantic** CSS roles once in each app:
+
+```css
+:root {
+  --bb-action-bg: var(--color-action);
+  --bb-action-fg: var(--color-on-action);
+  --bb-control-bg: var(--color-surface);
+  --bb-control-fg: var(--color-text);
+  --bb-line: var(--color-border);
+  --bb-muted: var(--color-text-muted);
+  --bb-focus: var(--color-focus);
+}
+```
+
+The exported grammar includes `bb-frame`, `bb-measure`, `bb-section`,
+`bb-stack`, `bb-cluster`, `bb-grid`, `bb-actions`,
+`bb-choice-row`, `bb-list`, `bb-keyline`, `bb-tabular`,
+`bb-control`, `bb-button`, and `bb-skip`.
+
+It guarantees 44px controls, visible focus, responsive equal-cell choices,
+and reduced-motion support. Apps own typography, colours, spacing adjustments,
+components and their content. Do **not** render all information as cards: the
+grammar deliberately offers whitespace and hairline lists.
+
+**Release note:** the `composition.css` subpath is available only from a
+version or commit that contains it. The existing `v1.1.0` tag does not include
+this file; publish/tag a new version and upgrade consumers before importing it.
+No existing importer of `tokens.css` changes behaviour because of this addition.
+
 ## The contract
 
 Components declare **intent**, never mechanics.

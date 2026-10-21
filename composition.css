@@ -1,0 +1,196 @@
+/**
+ * @bitbaum/design-tokens/composition.css
+ *
+ * Opt-in cross-product layout and interaction decisions, not a brand skin.
+ * No :root, html, body, element selectors or color values are set.
+ * Every rule is namespaced; apps provide semantic values through --bb-*.
+ *
+ * A site remains responsible for its own palette, fonts and personality.
+ * This layer owns only spatial rhythm, consistent controls, accessible
+ * interactions and density that behaves at 390px.
+ */
+
+:where(.bb-frame) {
+  width: min(100%, var(--bb-frame-max, 72rem));
+  margin-inline: auto;
+  padding-inline: var(--bb-gutter, clamp(1rem, 4vw, 3rem));
+}
+
+:where(.bb-measure) {
+  max-width: var(--bb-measure, 68ch);
+}
+
+:where(.bb-stack) {
+  display: grid;
+  gap: var(--bb-stack-gap, 1rem);
+  min-width: 0;
+}
+
+:where(.bb-cluster) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--bb-cluster-gap, 0.75rem);
+}
+
+:where(.bb-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--bb-grid-min, 16rem)), 1fr));
+  gap: var(--bb-grid-gap, 1.5rem);
+}
+
+:where(.bb-section) {
+  padding-block: var(--bb-section-space, clamp(3.5rem, 7vw, 7rem));
+}
+
+:where(.bb-keyline) {
+  border-block-start: 1px solid var(--bb-line, var(--color-border, currentColor));
+}
+
+:where(.bb-tabular) {
+  font-variant-numeric: tabular-nums;
+}
+
+:where(.bb-control) {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 44px;
+  border: 1px solid var(--bb-line, var(--color-border, currentColor));
+  border-radius: var(--bb-radius-control, 0.5rem);
+  padding: 0.75rem 0.9rem;
+  background: var(--bb-control-bg, Canvas);
+  color: var(--bb-control-fg, CanvasText);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+:where(.bb-control)::placeholder {
+  color: var(--bb-muted, GrayText);
+  opacity: 1;
+}
+
+:where(.bb-control:focus-visible, .bb-button:focus-visible, .bb-skip:focus-visible) {
+  outline: 3px solid var(--bb-focus, var(--bb-action-bg, Highlight));
+  outline-offset: 3px;
+}
+
+/* A textarea needs room to write, but not a fixed desktop-height on a phone. */
+:where(textarea.bb-control) {
+  resize: vertical;
+  min-block-size: 10rem;
+}
+
+:where(.bb-button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding: 0.75rem 1.2rem;
+  border: 1px solid transparent;
+  border-radius: var(--bb-radius-control, 0.5rem);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: normal;
+}
+
+:where(.bb-button--primary) {
+  color: var(--bb-action-fg, Canvas);
+  background: var(--bb-action-bg, CanvasText);
+}
+
+:where(.bb-button--secondary) {
+  color: var(--bb-action-bg, CanvasText);
+  background: var(--bb-control-bg, Canvas);
+  border-color: var(--bb-line, var(--color-border, currentColor));
+}
+
+:where(.bb-button:disabled, .bb-button[aria-disabled='true']) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Choose once, keep the choices in one row. Equal cells, never a 4+1 wrap. */
+:where(.bb-choice-row) {
+  display: grid;
+  grid-template-columns: repeat(var(--bb-choices, 2), minmax(0, 1fr));
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--bb-line, var(--color-border, currentColor));
+  border-radius: var(--bb-radius-control, 0.5rem);
+}
+
+:where(.bb-choice-row > *) {
+  min-width: 0;
+  min-height: 44px;
+}
+
+:where(.bb-choice-row > * + *) {
+  border-inline-start: 1px solid var(--bb-line, var(--color-border, currentColor));
+}
+
+/* Same shape and predictable vertical rhythm for sibling rows. */
+:where(.bb-list) {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.bb-list > * + *) {
+  border-block-start: 1px solid var(--bb-line, var(--color-border, currentColor));
+}
+
+:where(.bb-list > *) {
+  padding-block: var(--bb-list-row-y, 1rem);
+  min-width: 0;
+}
+
+:where(.bb-skip) {
+  position: absolute;
+  inset-inline-start: var(--bb-gutter, 1rem);
+  inset-block-start: -8rem;
+  z-index: 100;
+  padding: 0.8rem 1rem;
+  background: var(--bb-control-bg, Canvas);
+  color: var(--bb-control-fg, CanvasText);
+  border: 2px solid var(--bb-focus, Highlight);
+  border-radius: var(--bb-radius-control, 0.5rem);
+}
+
+:where(.bb-skip:focus) {
+  inset-block-start: 1rem;
+}
+
+@media (max-width: 640px) {
+  :where(.bb-actions) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  :where(.bb-actions > .bb-button) {
+    inline-size: 100%;
+  }
+}
+
+@media (min-width: 641px) {
+  :where(.bb-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.bb-button, .bb-control) {
+    transition: none;
+    animation: none;
+  }
+}
