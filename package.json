@@ -17,11 +17,13 @@
   },
   "files": [
     "tokens.css",
+    "composition.css",
     "tailwind-preset.js",
     "fonts"
   ],
   "exports": {
     "./tokens.css": "./tokens.css",
+    "./composition.css": "./composition.css",
     "./tailwind-preset": "./tailwind-preset.js",
     "./fonts/*": "./fonts/*"
   },
