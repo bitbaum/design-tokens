@@ -17,6 +17,9 @@ name: Publish
 on:
   push:
     tags: ['v*']
+  # Called explicitly by the verified tag workflow. GITHUB_TOKEN tag pushes
+  # intentionally do not retrigger workflows.
+  workflow_dispatch: {}
 
 # Publishing is idempotent: the job first asks the registry whether
 # package.json's version already exists and skips (green) if it does. A
