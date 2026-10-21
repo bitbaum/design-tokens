@@ -15,9 +15,13 @@ three different companies. Copies drift; imports cannot.
 
 ## Retheming the entire stack
 
-1. Edit the block marked `▼▼▼ THE KNOBS ▼▼▼` in `tokens.css`. Nothing else.
-2. Tag a release: `git tag v1.2.0 && git push --tags`
-3. Bump `@bitbaum/design-tokens` in the three apps. Their CI auto-merges.
+1. Edit the block marked `▼▼▼ THE KNOBS ▼▼▼` in `tokens.css` for a retheme, or update the optional `composition.css` contract for interface improvements.
+2. Bump `package.json`'s version **and** set the matching explicit `.github/release-request.txt`; submit a PR and pass package CI.
+3. A successful **main-branch push CI** triggers `tag-approved-release.yml`. It tags only the exact latest verified SHA and never rewrites an existing version tag.
+4. The tag workflow explicitly dispatches `publish.yml`; npm publishing is still guarded by `NPM_PUBLISHING` and requires trusted-publishing bootstrap. If that variable is off, a Git tag exists but **no npm release** is claimed.
+5. Upgrade consumers to the confirmed Git tag, published npm version, or an exact source-commit SHA; run their frozen-lockfile CI.
+
+The one-time release request does not automatically approve future version bumps: a request must match the manifest version.
 
 Changing the display typeface is **one line**:
 
@@ -62,9 +66,11 @@ For spacing, control sizing, visual rhythm and interaction *decisions*,
 colours, body style or global reset.
 
 ```tsx
-// App Router — any React app may opt into the grammar without its brand skin
-import '@bitbaum/design-tokens/composition.css';
+// App Router — load AFTER the app's CSS reset and BEFORE product CSS modules.
+// The shared classes intentionally use :where() specificity, so importing
+// them before a later universal '*' padding reset would erase their padding.
 import './globals.css';
+import '@bitbaum/design-tokens/composition.css';
 ```
 
 ```tsx
@@ -103,12 +109,13 @@ and reduced-motion support. Apps own typography, colours, spacing adjustments,
 components and their content. Do **not** render all information as cards: the
 grammar deliberately offers whitespace and hairline lists.
 
-**Release note:** this source tree is prepared as `1.2.0`, but changing the
-manifest does not publish it. The existing `v1.1.0` tag does not contain
-`composition.css`. Until the `v1.2.0` Git tag and/or npm package are actually
-published, consumers must pin an **exact commit SHA** that includes the
-stylesheet. Never import this subpath from a consumer pinned to `v1.1.0`.
-No existing importer of `tokens.css` changes behaviour because of this addition.
+**Release contract:** the new composition subpath first appears in
+source version `1.2.0`; `v1.1.0` does **not** include it. The verified
+tagging pipeline only tags a version explicitly requested in
+`.github/release-request.txt` after main CI is green. Verify the
+`v1.2.0` Git ref and the registry separately before claiming either is
+published. Until then, use a verified exact commit SHA. Existing
+`tokens.css` consumers do not change appearance by opting out.
 
 ## The contract
 
