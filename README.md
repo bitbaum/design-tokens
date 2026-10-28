@@ -35,7 +35,7 @@ Changing the display typeface is **one line**:
 
 ```jsonc
 // package.json
-"@bitbaum/design-tokens": "github:bitbaum/design-tokens#v1.1.0"
+"@bitbaum/design-tokens": "^1.2.0"
 ```
 
 ```tsx
