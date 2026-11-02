@@ -147,6 +147,58 @@ Self-hosted (latin + latin-ext), no runtime requests to Google:
 
 All three are SIL Open Font License.
 
+### Faces for Next apps (`next/font/local`)
+
+`next/font/google` downloads its faces during `next build`, so a build fails
+whenever Google Fonts does not answer. The faces the fleet's apps use ship in
+`fonts/<face>/` instead, each beside its `OFL.txt`, and
+[`fonts/faces.json`](./fonts/faces.json) lists every file with the subset,
+style, weight range, `unicode-range` and SHA-256 Google serves it under:
+
+| Face (slug) | Weights | Styles | Subsets |
+|---|---|---|---|
+| Inter (`inter`) | 100–900 variable | normal | latin, latin-ext, cyrillic, cyrillic-ext, greek, greek-ext, vietnamese |
+| Space Grotesk (`space-grotesk`) | 300–700 variable | normal | latin, latin-ext, vietnamese |
+| IBM Plex Mono (`ibm-plex-mono`) | 400, 500, 600 | normal | latin, latin-ext, cyrillic, cyrillic-ext, vietnamese |
+| Fraunces (`fraunces`) | 100–900 variable | normal, italic | latin, latin-ext, vietnamese |
+| Cormorant Garamond (`cormorant-garamond`) | 300–700 variable | normal, italic | latin, latin-ext, cyrillic, cyrillic-ext, vietnamese |
+| DM Sans (`dm-sans`) | 100–1000 variable | normal | latin, latin-ext |
+| Geist (`geist`) | 100–900 variable | normal | latin, latin-ext, cyrillic, cyrillic-ext, vietnamese |
+| Geist Mono (`geist-mono`) | 100–900 variable | normal | latin, latin-ext, cyrillic, cyrillic-ext, symbols2, vietnamese |
+| JetBrains Mono (`jetbrains-mono`) | 100–800 variable | normal | latin, latin-ext, cyrillic, cyrillic-ext, greek, vietnamese |
+| Montserrat (`montserrat`) | 100–900 variable | normal | latin, latin-ext, cyrillic, cyrillic-ext, vietnamese |
+
+`next/font` takes only literal options in the calling module, and one call
+carries one `unicode-range`, so an app gets its font module from a command
+rather than from a helper:
+
+```bash
+pnpm exec design-tokens-next-fonts src/app/fonts.ts \
+  'sans=inter;variable=--font-inter' \
+  'display=space-grotesk;weight=500,700;variable=--font-space-grotesk'
+```
+
+```tsx
+// app/layout.tsx
+import { display, sans } from './fonts';
+<html className={`${sans.variable} ${display.variable}`}>
+```
+
+Keys after the face: `weight=` (default: the whole range), `style=` (default
+`normal`), `variable=`, `subsets=` (default: all shipped), `preload=` (default
+`latin`; `none`), `display=` (default `swap`). It writes one `localFont` call
+per subset, in Google's order: the same files, weights, styles, ranges and
+preloads `next/font/google` produced, formatted with the app's own prettier.
+The first lines of the file are the command that wrote it; add `--check` to
+fail when the file and the package disagree. Two things differ from Google, and
+neither changes a rendered page: the family is named after the export (Turbopack
+ignores a `font-family` declaration in `.variable`), and the fallback face is
+measured from the file instead of Google's table.
+
+`node scripts/fetch-fonts.mjs` (maintainers only, never in a build) is how the
+files got here: it asks Google exactly what `next/font/google` asks, with its
+user agent.
+
 ### Why a serif
 
 Every AI and infrastructure company competes inside the same dark-canvas
