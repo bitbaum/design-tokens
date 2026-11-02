@@ -94,11 +94,14 @@ export function calls(spec) {
     if (!shipped.includes(s))
       throw new Error(`${spec.face} has no subset "${s}"; shipped: ${shipped.join(', ')}`);
   // Google's order is kept, because it decides which file wins a character two
-  // subsets both list. The export itself is the first preloaded subset (else
-  // the first), measured for the fallback metrics as next/font/google measures
-  // its preloaded latin file.
+  // subsets both list. The export itself is latin when latin is declared,
+  // else the first preloaded subset, else the first: it is the file measured
+  // for the fallback metrics, and a cyrillic file has no latin letters to
+  // measure (Inter's gives size-adjust 100% where latin gives 107.89%).
   const ordered = shipped.filter((s) => subsets.includes(s));
-  const primary = ordered.find((s) => preload.includes(s)) ?? ordered[0];
+  const primary = ordered.includes('latin')
+    ? 'latin'
+    : (ordered.find((s) => preload.includes(s)) ?? ordered[0]);
   return ordered.map((subset) => {
     const isPrimary = subset === primary;
     const src = [];

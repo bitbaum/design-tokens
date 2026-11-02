@@ -5,6 +5,14 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.3.1
+
+- `design-tokens-next-fonts`: the export (the call that carries `.variable`
+  and is measured for the fallback face) is the latin subset whenever latin
+  is declared. With `preload=latin,latin-ext,cyrillic` 1.3.0 picked cyrillic,
+  whose file has no latin letters, so the fallback was sized at 100% instead
+  of Inter's 107.89%.
+
 ## 1.3.0
 
 - Faces for apps that used `next/font/google`, as woff2 with their SIL OFL
