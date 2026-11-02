@@ -84,6 +84,18 @@ test('one call per subset, in Google order, the export carrying the variable', a
   }
 });
 
+test('latin is the export even when an earlier subset is also preloaded', async () => {
+  const { calls, parseSpec } = await generator();
+  const out = calls(parseSpec('sans=inter;preload=latin,latin-ext,cyrillic'));
+  const [primary] = out.filter((c) => c.primary);
+  assert.equal(primary.name, 'sans');
+  assert.match(primary.src[0].file, /inter-latin\.woff2$/);
+  assert.deepEqual(
+    out.filter((c) => c.preload).map((c) => c.name),
+    ['sansCyrillic', 'sansLatinExt', 'sans'],
+  );
+});
+
 test('a serif face measures its fallback against Times New Roman, as next/font/google does', async () => {
   const { calls, parseSpec } = await generator();
   const [primary] = calls(parseSpec('cormorant=cormorant-garamond;style=normal,italic')).filter(
