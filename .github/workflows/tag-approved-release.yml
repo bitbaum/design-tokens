@@ -59,6 +59,17 @@ jobs:
           if git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null 2>&1; then
             echo "v$version is already tagged, never move an existing tag."
             echo "release=false" >> "$GITHUB_OUTPUT"
+            # git-release.yml runs on the same CI completion and tags the same
+            # verified commit, usually first. Its tag is pushed with
+            # GITHUB_TOKEN, which starts no workflow, so publish.yml never ran:
+            # 1.3.0 and 1.3.1 (2026-11-02) were tagged and not published until
+            # someone dispatched it by hand. When the existing tag IS this
+            # verified commit, dispatch publication for it; publish.yml does
+            # nothing for a version already on the registry.
+            git fetch -q origin "refs/tags/v$version:refs/tags/v$version"
+            if [ "$(git rev-parse "v$version^{commit}")" = "$VERIFIED_SHA" ]; then
+              echo "publish=true" >> "$GITHUB_OUTPUT"
+            fi
             exit 0
           fi
 
@@ -81,11 +92,11 @@ jobs:
       # explicit workflow_dispatch does; publish.yml retains its own gated
       # NPM_PUBLISHING variable and will never bypass npm trusted publishing.
       - name: Dispatch publication workflow for the tag
-        if: steps.approval.outputs.release == 'true'
+        if: steps.approval.outputs.release == 'true' || steps.approval.outputs.publish == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.approval.outputs.version }}
         shell: bash
         run: |
           gh workflow run publish.yml --ref "v$VERSION"
-          echo "Created v$VERSION and dispatched guarded publication." >> "$GITHUB_STEP_SUMMARY"
+          echo "Dispatched guarded publication of v$VERSION." >> "$GITHUB_STEP_SUMMARY"
