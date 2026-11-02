@@ -9,6 +9,8 @@
 //          subsets=latin,...     subsets to declare (default: every subset shipped)
 //          preload=latin,...     subsets to preload (default: latin; "none" for none)
 //          display=swap          font-display (default: swap)
+//          hinting=on            the TrueType-hinted files (default: off, the
+//                                unhinted ones next/font/google downloaded)
 //
 //   --check   exit 1 if <out-file> is not what this command would write
 //
@@ -66,7 +68,7 @@ export function parseSpec(text) {
   const spec = { name, face };
   for (const pair of pairs) {
     const [key, value] = pair.split('=');
-    if (!['weight', 'style', 'variable', 'subsets', 'preload', 'display'].includes(key))
+    if (!['weight', 'style', 'variable', 'subsets', 'preload', 'display', 'hinting'].includes(key))
       throw new Error(`"${text}": unknown key "${key}"`);
     spec[key] = value;
   }
@@ -86,6 +88,12 @@ const camel = (s) => s.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase());
 export function calls(spec) {
   const face = faces[spec.face];
   const styles = list(spec.style) ?? ['normal'];
+  if (spec.hinting && !['on', 'off'].includes(spec.hinting))
+    throw new Error(`hinting=${spec.hinting}: on or off`);
+  // Google serves a Mac the unhinted files (what next/font/google got) and a
+  // current Chrome on Windows or Linux the hinted ones, which those platforms
+  // draw differently. An app keeps whichever it had.
+  const hinted = spec.hinting === 'on';
   const weights = list(spec.weight);
   const preload = spec.preload === 'none' ? [] : (list(spec.preload) ?? ['latin']);
   const shipped = [...new Set(face.files.map((f) => f.subset))];
@@ -106,7 +114,9 @@ export function calls(spec) {
     const isPrimary = subset === primary;
     const src = [];
     for (const style of styles) {
-      const files = face.files.filter((f) => f.subset === subset && f.style === style);
+      const files = face.files
+        .filter((f) => f.subset === subset && f.style === style)
+        .map((f) => (hinted ? { ...f, file: f.hinted?.file ?? f.file } : f));
       if (!files.length) throw new Error(`${spec.face} has no ${style} ${subset} file`);
       if (face.variable) {
         for (const weight of weights ?? [files[0].weight])

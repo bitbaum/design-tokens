@@ -186,7 +186,9 @@ import { display, sans } from './fonts';
 
 Keys after the face: `weight=` (default: the whole range), `style=` (default
 `normal`), `variable=`, `subsets=` (default: all shipped), `preload=` (default
-`latin`; `none`), `display=` (default `swap`). It writes one `localFont` call
+`latin`; `none`), `display=` (default `swap`), `hinting=on` (the TrueType-hinted
+files in `fonts/<face>/hinted/`, which Google serves a current Chrome on Windows
+or Linux; the default is the unhinted ones `next/font/google` downloaded). It writes one `localFont` call
 per subset, in Google's order: the same files, weights, styles, ranges and
 preloads `next/font/google` produced, formatted with the app's own prettier.
 The first lines of the file are the command that wrote it; add `--check` to
