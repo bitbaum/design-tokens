@@ -5,6 +5,16 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.4.0
+
+- Every face also ships TrueType-hinted, in `fonts/<face>/hinted/`
+  (`hinted` on each entry of `fonts/faces.json`): what Google serves a current
+  Chrome on Windows or Linux. `next/font/google` asks as a Mac and gets the
+  unhinted files, which stay the default; a site that downloaded its faces
+  from a browser has the hinted ones, and they draw differently on Windows
+  and Linux. `design-tokens-next-fonts` takes `hinting=on` to keep them.
+  OrangeCat's `src/fonts` were these files, byte for byte.
+
 ## 1.3.1
 
 - `design-tokens-next-fonts`: the export (the call that carries `.variable`

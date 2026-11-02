@@ -16,7 +16,7 @@ const path = require('node:path');
 
 const root = path.join(__dirname, '..');
 const fonts = path.join(root, 'fonts');
-/** @type {Record<string, {family: string, category: string, licence: string, variable: boolean, files: {file: string, subset: string, style: string, weight: string, unicodeRange: string, sha256: string}[]}>} */
+/** @type {Record<string, {family: string, category: string, licence: string, variable: boolean, files: {file: string, subset: string, style: string, weight: string, unicodeRange: string, sha256: string, hinted?: {file: string, sha256: string}}[]}>} */
 const faces = JSON.parse(fs.readFileSync(path.join(fonts, 'faces.json'), 'utf8'));
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 
@@ -39,6 +39,15 @@ test('every face in faces.json is a woff2 file matching its recorded hash, besid
       assert.equal(bytes.subarray(0, 4).toString('latin1'), 'wOF2', `${f.file} is not woff2`);
       assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'), f.sha256, f.file);
       assert.match(f.unicodeRange, /^U\+[0-9A-F]/, `${f.file} has no unicode-range`);
+      if (f.hinted) {
+        const hinted = fs.readFileSync(path.join(fonts, f.hinted.file));
+        assert.equal(
+          hinted.subarray(0, 4).toString('latin1'),
+          'wOF2',
+          `${f.hinted.file} is not woff2`,
+        );
+        assert.equal(crypto.createHash('sha256').update(hinted).digest('hex'), f.hinted.sha256);
+      }
     }
   }
 });
@@ -113,6 +122,16 @@ test('a static face declares one file per weight and refuses a weight it does no
     ['ibm-plex-mono/ibm-plex-mono-400-latin.woff2', 'ibm-plex-mono/ibm-plex-mono-600-latin.woff2'],
   );
   assert.throws(() => calls(parseSpec('mono=ibm-plex-mono;weight=300')), /no normal 300/);
+});
+
+test('hinting=on takes the hinted file of every subset, and only that changes', async () => {
+  const { calls, parseSpec } = await generator();
+  const plain = calls(parseSpec('inter=inter;subsets=latin'));
+  const hinted = calls(parseSpec('inter=inter;subsets=latin;hinting=on'));
+  assert.equal(plain[0].src[0].file, 'inter/inter-latin.woff2');
+  assert.equal(hinted[0].src[0].file, 'inter/hinted/inter-latin.woff2');
+  assert.deepEqual({ ...hinted[0], src: [] }, { ...plain[0], src: [] });
+  assert.throws(() => calls(parseSpec('inter=inter;hinting=yes')), /on or off/);
 });
 
 test('the export name becomes the family, so a CSS generic name is refused', async () => {
