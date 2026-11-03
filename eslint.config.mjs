@@ -5,7 +5,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 
 export default [
-  { ignores: ['node_modules/**', 'fonts/**'] },
+  { ignores: ['node_modules/**', 'fonts/**', 'og/faces/**'] },
   js.configs.recommended,
   {
     files: ['**/*.js'],
