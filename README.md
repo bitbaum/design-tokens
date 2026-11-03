@@ -168,9 +168,14 @@ return new ImageResponse(<Card title={ogText(post.title)} />, {
   unchanged. `ogFonts('inter:400,600')` or `ogFonts('inter')` (every weight
   shipped) names others; each font is named after its family, and a
   `fontFamily` no font has falls back to the first.
-- `ogText(text, ...specs)` drops the characters none of the faces draws (an
-  emoji, a symbol, another script). Use it on text the image does not control,
-  such as a name or a title from a database.
+- `ogText(text, ...specs)` leaves out what none of the faces draws: a word
+  missing a letter (another script) whole, an emoji or symbol on its own. Use
+  it on text the image does not control, such as a name or a title from a
+  database.
+- For such text, pass Inter after Geist: `ogFonts('geist', 'inter:400')` and
+  `ogText(text, 'geist', 'inter:400')`. Satori draws with Geist and takes what
+  Geist lacks (Greek, Vietnamese, ₿, ✓, many arrows) from Inter, without a
+  fetch; what Geist draws looks as before.
 - The renderer reads neither WOFF2 nor variable fonts, so these are static
   instances stored as WOFF in JS modules (`og/faces/`): any runtime (edge or
   Node) and any bundler imports them, and a route loads only the faces it

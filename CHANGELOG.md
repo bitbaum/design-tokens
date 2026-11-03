@@ -5,6 +5,16 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.5.1
+
+- `ogText` leaves out a word that is missing a letter, whole, instead of the
+  letters alone: in Geist, which has λ but not the rest of Greek, "Ελλάδα"
+  became "λλ". An emoji or symbol is still left out on its own, and the
+  result is trimmed. README: for text an image does not control, pass Inter
+  after Geist (`ogFonts('geist', 'inter:400')`, same specs to `ogText`);
+  satori draws what Geist lacks from Inter (Greek, Vietnamese, ₿, ✓, arrows)
+  and fetches nothing.
+
 ## 1.5.0
 
 - `@bitbaum/design-tokens/og`: fonts for generated images (next/og's

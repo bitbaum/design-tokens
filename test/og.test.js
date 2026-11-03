@@ -55,10 +55,19 @@ test('a face or weight the package lacks is an error, not a fetch', async () => 
 test('ogText keeps what the faces draw and drops what they do not', async () => {
   const { ogText } = await og();
   assert.equal(ogText('Zürich — Жизнь 2026'), 'Zürich — Жизнь 2026');
-  assert.equal(ogText('Price ₿ 0.01 ✓ 🐾'), 'Price 0.01 ');
+  assert.equal(ogText('Price ₿ 0.01 ✓ 🐾'), 'Price 0.01');
   assert.equal(ogText('Price ₿ ✓', 'inter'), 'Price ₿ ✓');
   assert.equal(ogText('a 👩‍👩‍👧 b'), 'a b');
+  assert.equal(ogText('Hallo🐾 Welt'), 'Hallo Welt');
   assert.equal(ogText(null), '');
+});
+
+test('ogText leaves out a word missing a letter, never half of it', async () => {
+  const { ogText } = await og();
+  // Geist has λ (a maths symbol) and not the rest of the Greek alphabet.
+  assert.equal(ogText('Athen Ελλάδα 2026'), 'Athen 2026');
+  assert.equal(ogText('Athen Ελλάδα 2026', 'geist', 'inter:400'), 'Athen Ελλάδα 2026');
+  assert.equal(ogText('東京 Tokyo'), 'Tokyo');
 });
 
 test('WOFF keeps every table; coverage reads format 4 the way the font does', async () => {

@@ -75,26 +75,37 @@ function covers(ranges, cp) {
 const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
 
 /**
- * `text` without the characters none of the given faces draws (same specs as
- * ogFonts, default Geist): an emoji, a symbol, another script. For text an
- * image does not control, such as a name or a title from the database, so it
- * can never make the renderer go looking for a font. Whitespace is kept.
+ * `text` without what none of the given faces draws (same specs as ogFonts,
+ * default Geist), so it can never make the renderer go looking for a font.
+ * For text an image does not control, such as a name or a title from the
+ * database. A word missing a letter is left out whole, since half a word is
+ * wrong where a missing one is not ("Ελλάδα" in a face with only λ is not
+ * "λλ"); an emoji or symbol the faces lack is left out on its own.
+ * Whitespace is kept.
  *
- * @param {string} text
+ * @param {string | null | undefined} text
  * @param {...string} specs
  */
 export function ogText(text, ...specs) {
   const coverages = parse(specs).flatMap(([slug, weights]) =>
     weights.map((w) => FACES[slug].weights[w].coverage),
   );
-  let out = '';
-  for (const { segment } of segmenter.segment(String(text ?? ''))) {
-    if (/^\s+$/u.test(segment)) {
-      out += segment;
-      continue;
-    }
+  const drawn = (segment) => {
     const points = [...segment].map((c) => c.codePointAt(0));
-    if (coverages.some((ranges) => points.every((cp) => covers(ranges, cp)))) out += segment;
-  }
-  return out.replace(/[ \t]{2,}/g, ' ');
+    return coverages.some((ranges) => points.every((cp) => covers(ranges, cp)));
+  };
+  return String(text ?? '')
+    .split(/(\s+)/u)
+    .map((token) => {
+      if (!token || /^\s+$/u.test(token)) return token;
+      let out = '';
+      for (const { segment } of segmenter.segment(token)) {
+        if (drawn(segment)) out += segment;
+        else if (/[\p{L}\p{M}]/u.test(segment)) return '';
+      }
+      return out;
+    })
+    .join('')
+    .replace(/[ \t]{2,}/g, ' ')
+    .trim();
 }
