@@ -5,6 +5,15 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.5.2
+
+- `ogText` no longer drops the word an emoji is attached to: U+FE0F (emoji
+  presentation, in "♻️" or "☕️") is a mark, which 1.5.1 took for a missing
+  letter, so "♻️," lost its comma. A grapheme counts as a letter when it starts
+  with one. Punctuation that followed a dropped emoji joins the word before it
+  ("Kreislaufwirtschaft ♻️, Arbeitsintegration" → "Kreislaufwirtschaft,
+  Arbeitsintegration"); spacing nothing was dropped from is kept.
+
 ## 1.5.1
 
 - `ogText` leaves out a word that is missing a letter, whole, instead of the

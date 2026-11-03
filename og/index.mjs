@@ -94,17 +94,30 @@ export function ogText(text, ...specs) {
     const points = [...segment].map((c) => c.codePointAt(0));
     return coverages.some((ranges) => points.every((cp) => covers(ranges, cp)));
   };
-  return String(text ?? '')
-    .split(/(\s+)/u)
-    .map((token) => {
-      if (!token || /^\s+$/u.test(token)) return token;
-      let out = '';
-      for (const { segment } of segmenter.segment(token)) {
-        if (drawn(segment)) out += segment;
-        else if (/[\p{L}\p{M}]/u.test(segment)) return '';
-      }
-      return out;
-    })
+  const out = [];
+  for (const token of String(text ?? '').split(/(\s+)/u)) {
+    if (!token || /^\s+$/u.test(token)) {
+      out.push(token);
+      continue;
+    }
+    let kept = '';
+    let droppedFirst = false;
+    let word = true;
+    for (const { segment } of segmenter.segment(token)) {
+      if (drawn(segment)) kept += segment;
+      // A letter (it may carry marks) the faces lack: the word goes whole.
+      // Starts-with, because an emoji's variation selector (U+FE0F) is a mark.
+      else if (/^\p{L}/u.test(segment)) {
+        word = false;
+        break;
+      } else if (!kept) droppedFirst = true;
+    }
+    if (!word) kept = '';
+    // "Kreislauf ♻️, Bildung": what followed the emoji joins the word before it.
+    if (droppedFirst && /^\p{P}/u.test(kept) && /^\s+$/u.test(out[out.length - 1] ?? '')) out.pop();
+    out.push(kept);
+  }
+  return out
     .join('')
     .replace(/[ \t]{2,}/g, ' ')
     .trim();
