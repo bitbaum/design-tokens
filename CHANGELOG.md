@@ -5,6 +5,18 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.5.0
+
+- `@bitbaum/design-tokens/og`: fonts for generated images (next/og's
+  `ImageResponse`: `opengraph-image`, `icon`, route handlers).
+  `fonts: await ogFonts()` hands the renderer Geist 400, the face it falls
+  back to when given none, so an image looks as it did; `ogFonts('inter:400,600')`
+  names others. `ogText(text)` drops characters the faces do not cover. Given
+  no `fonts`, or text a font lacks, next/og fetches from fonts.googleapis.com
+  (and cdn.jsdelivr.net for emoji) at render time. The faces are static WOFF
+  in JS modules (`og/faces/`), written by `scripts/og-fetch-fonts.mjs` from
+  Google's static TTFs: Geist 400, Inter 400 and 600.
+
 ## 1.4.0
 
 - Every face also ships TrueType-hinted, in `fonts/<face>/hinted/`

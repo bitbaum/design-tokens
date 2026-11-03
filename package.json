@@ -1,6 +1,6 @@
 {
   "name": "@bitbaum/design-tokens",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "packageManager": "pnpm@11.25.0",
   "engines": {
     "node": ">=20"
@@ -20,7 +20,8 @@
     "composition.css",
     "tailwind-preset.js",
     "next-fonts.mjs",
-    "fonts"
+    "fonts",
+    "og"
   ],
   "exports": {
     "./tokens.css": "./tokens.css",
@@ -28,6 +29,10 @@
     "./tailwind-preset": "./tailwind-preset.js",
     "./fonts/*": "./fonts/*",
     "./next-fonts": "./next-fonts.mjs",
+    "./og": {
+      "types": "./og/index.d.ts",
+      "default": "./og/index.mjs"
+    },
     "./package.json": "./package.json"
   },
   "bin": {
@@ -43,7 +48,8 @@
     "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "fonts:fetch": "node scripts/fetch-fonts.mjs"
+    "fonts:fetch": "node scripts/fetch-fonts.mjs",
+    "fonts:og": "node scripts/og-fetch-fonts.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

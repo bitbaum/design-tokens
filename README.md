@@ -147,6 +147,36 @@ Self-hosted (latin + latin-ext), no runtime requests to Google:
 
 All three are SIL Open Font License.
 
+### Faces for generated images (`next/og`)
+
+Given no `fonts`, next/og's `ImageResponse` draws with the Geist Regular it
+bundles, and for any character no font covers it asks `fonts.googleapis.com`
+(and `cdn.jsdelivr.net` for emoji) while the image is drawn: a build that
+prerenders an image, or a server that draws one, then depends on Google, and
+offline an emoji fails the whole image. Pass the faces from here instead:
+
+```tsx
+import { ogFonts, ogText } from '@bitbaum/design-tokens/og';
+
+return new ImageResponse(<Card title={ogText(post.title)} />, {
+  ...size,
+  fonts: await ogFonts(),
+});
+```
+
+- `ogFonts()` is Geist 400, the face next/og would have used, so the image is
+  unchanged. `ogFonts('inter:400,600')` or `ogFonts('inter')` (every weight
+  shipped) names others; each font is named after its family, and a
+  `fontFamily` no font has falls back to the first.
+- `ogText(text, ...specs)` drops the characters none of the faces draws (an
+  emoji, a symbol, another script). Use it on text the image does not control,
+  such as a name or a title from a database.
+- The renderer reads neither WOFF2 nor variable fonts, so these are static
+  instances stored as WOFF in JS modules (`og/faces/`): any runtime (edge or
+  Node) and any bundler imports them, and a route loads only the faces it
+  names. Shipped: Geist 400, Inter 400 and 600. A face it lacks is added to
+  `OG_FACES` in `scripts/og-fetch-fonts.mjs` and released, never fetched.
+
 ### Faces for Next apps (`next/font/local`)
 
 `next/font/google` downloads its faces during `next build`, so a build fails
