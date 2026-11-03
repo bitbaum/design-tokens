@@ -59,6 +59,13 @@ test('ogText keeps what the faces draw and drops what they do not', async () => 
   assert.equal(ogText('Price ₿ ✓', 'inter'), 'Price ₿ ✓');
   assert.equal(ogText('a 👩‍👩‍👧 b'), 'a b');
   assert.equal(ogText('Hallo🐾 Welt'), 'Hallo Welt');
+  // U+FE0F (emoji presentation) is a mark; the punctuation after it stays.
+  assert.equal(
+    ogText('Kreislaufwirtschaft ♻️, Arbeitsintegration'),
+    'Kreislaufwirtschaft, Arbeitsintegration',
+  );
+  assert.equal(ogText('Bonjour ! Ça va ?'), 'Bonjour ! Ça va ?');
+  assert.equal(ogText('Café ☕️'), 'Café');
   assert.equal(ogText(null), '');
 });
 
