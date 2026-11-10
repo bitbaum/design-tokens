@@ -93,3 +93,22 @@ test('the importer refuses what it cannot convert faithfully', async () => {
     MarkImportError,
   );
 });
+
+test('the registry the importer writes is valid for any fleet slug', async () => {
+  const { registrySource, markIdentifier } = await importer();
+  assert.equal(markIdentifier('geo-kit'), 'geoKit');
+  assert.equal(markIdentifier('3d-print'), '_3dPrint');
+  const source = registrySource(['solon', 'geo-kit', '3d-print']);
+  assert.ok(source.includes("import _3dPrint from './3d-print.mjs';"));
+  assert.ok(source.includes("'3d-print': _3dPrint"));
+  assert.ok(source.includes("'geo-kit': geoKit"));
+  assert.ok(source.indexOf("'./3d-print.mjs'") < source.indexOf("'./geo-kit.mjs'"));
+  // It must parse: written to a module and imported, with the files it names stubbed out.
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'marks-'));
+  for (const slug of ['solon', 'geo-kit', '3d-print']) {
+    fs.writeFileSync(path.join(dir, `${slug}.mjs`), `export default { slug: '${slug}' };`);
+  }
+  fs.writeFileSync(path.join(dir, 'registry.mjs'), source);
+  const { MARKS } = await import(path.join(dir, 'registry.mjs'));
+  assert.deepEqual(Object.keys(MARKS).sort(), ['3d-print', 'geo-kit', 'solon']);
+});

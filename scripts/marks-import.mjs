@@ -29,8 +29,15 @@ const option = (name) => {
   return i >= 0 ? process.argv[i + 1] : undefined;
 };
 
-/** @param {string} slug */
-const ident = (slug) => slug.replace(/-(\w)/g, (_, c) => c.toUpperCase());
+/** `geo-kit` → `geoKit`; a leading digit gets an underscore (`3d-print` → `_3dPrint`). */
+export function markIdentifier(/** @type {string} */ slug) {
+  const camel = slug.replace(/[-_]+([a-z0-9])/g, (_, c) => c.toUpperCase());
+  return /^[0-9]/.test(camel) ? `_${camel}` : camel;
+}
+
+/** A slug as an object key: bare when it is a valid identifier, quoted otherwise. */
+const objectKey = (/** @type {string} */ slug) =>
+  /^[A-Za-z_$][\w$]*$/.test(slug) ? slug : `'${slug}'`;
 
 export function registrySource(/** @type {string[]} */ slugs) {
   const sorted = [...slugs].sort();
@@ -39,10 +46,12 @@ export function registrySource(/** @type {string[]} */ slugs) {
     ' * Every mark, by fleet slug. GENERATED from the mark files in this folder by',
     ' * `pnpm run marks:import`; do not edit by hand.',
     ' */',
-    ...sorted.map((s) => `import ${ident(s)} from './${s}.mjs';`),
+    ...sorted.map((s) => `import ${markIdentifier(s)} from './${s}.mjs';`),
     '',
     `export const MARKS = Object.freeze({ ${sorted
-      .map((s) => (ident(s) === s ? s : `'${s}': ${ident(s)}`))
+      .map((s) =>
+        objectKey(s) === markIdentifier(s) ? s : `${objectKey(s)}: ${markIdentifier(s)}`,
+      )
       .join(', ')} });`,
     '',
   ].join('\n');

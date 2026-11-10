@@ -5,6 +5,13 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.6.1
+
+- `marks:import` writes a valid registry for any fleet slug: a slug that
+  starts with a digit (`3d-print`) or has dashes is imported under a safe
+  name (`_3dPrint`, `geoKit`) and keyed by its quoted slug. 1.6.0 wrote
+  `import 3dPrint …`, which does not parse.
+
 ## 1.6.0
 
 - `@bitbaum/design-tokens/marks`: every product's mark (OrangeCat, Loki,
