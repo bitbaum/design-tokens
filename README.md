@@ -250,6 +250,40 @@ Part of **[bitbaum](https://bitbaum.orangecat.ch)** — AI-native products on op
 infrastructure, built in Zürich. Every package here lists the apps that use it:
 **[which apps use design-tokens](https://bitbaum.orangecat.ch/packages/#design-tokens)**.
 
+## Marks
+
+Every product's logo, as data, in `@bitbaum/design-tokens/marks`. A mark is
+one colour: a `viewBox` and shapes, each stroked or filled with whatever
+colour the surface hands it. The products draw their own mark and their
+siblings' from here (headers, favicons, share cards, OrangeCat's studio
+tiles), so replacing a logo is one change in this package and a release.
+
+```js
+import { markFor, markSvg, iconSvg } from '@bitbaum/design-tokens/marks';
+
+const solon = markFor('solon'); // null for a product with no mark yet
+markSvg(solon, { size: 32, color: '#141414' }); // standalone <svg> markup
+iconSvg(solon); // the app-icon tile (mark in its iconInk on near-black)
+```
+
+In React, draw `mark.shapes` as `<path>`s with `fill` or `stroke` set to
+`currentColor`. `motion` says how a mark may move when a hero asks for it:
+`draw`, `spin` (Loki's disc), `turn` (the shapes with a `turnAbout` point) or
+`none`. Chrome-sized marks never move.
+
+To replace a mark, or add one for a new product, export the logo as plain
+SVG (outlined text, flattened transforms) and run:
+
+```bash
+pnpm run marks:import <slug> path/to/logo.svg [--name "Name"] [--motion draw|spin|turn|none]
+```
+
+It keeps the geometry and drops the colours. It refuses transforms, masks,
+`<use>`, `<text>` and `<image>`, each with a message saying what to flatten.
+It writes `marks/<slug>.mjs` and rebuilds the registry. OrangeCat's and Loki's
+marks are drawn by generator functions in their own repositories. Their
+output is what is stored here.
+
 ## Data maps
 
 `--map-scale-1` … `--map-scale-7` are the one sequential scale for every

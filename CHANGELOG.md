@@ -5,6 +5,15 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.6.0
+
+- `@bitbaum/design-tokens/marks`: every product's mark (OrangeCat, Loki,
+  Solon) as data, with `markFor`, `markSvg`, `iconSvg`, `ICON_STYLE` and the
+  SVG importer (`svgToMark`, `pnpm run marks:import`). Moved from OrangeCat's
+  `src/config/marks/`, where each product kept its own copy and Solon's had
+  drifted from the mark Solon used. Solon's mark is the owl it adopted on
+  2026-11-10.
+
 ## 1.5.2
 
 - `ogText` no longer drops the word an emoji is attached to: U+FE0F (emoji
