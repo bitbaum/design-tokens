@@ -117,22 +117,12 @@ test('white is NOT an acceptable label on the default (OrangeCat, Loki) accent',
   );
 });
 
-test('--on-accent does not flip between themes', () => {
-  // The accent is theme-independent, so its label must be too. A label that
-  // inverted with the theme would be unreadable in one of them — which is
-  // exactly why no existing text token could be reused for this role.
-  // It is declared once for the default accent and once per brand, never in
-  // a `.dark` block.
-  const defs = [...css.matchAll(/--on-accent\s*:\s*([^;]+);/g)].map((m) => m[1].trim());
-  assert.equal(
-    defs.length,
-    1 + BRANDS.length,
-    `--on-accent is defined ${defs.length} times (${defs.join(' | ')}); expected once ` +
-      `for the default accent and once per brand (${BRANDS.join(', ')}).`,
-  );
-  for (const rule of [darkBlock(), ...BRANDS.map((b) => block(`.dark[data-brand='${b}']`))]) {
-    assert.ok(!/--on-accent/.test(rule), 'a `.dark` block must not redefine --on-accent');
-  }
+test('--on-accent is one literal for the orange default and is never redefined in `.dark`', () => {
+  // The default accent is theme-independent, so its label must be too. A label
+  // that inverted with the theme would be unreadable in one of them. (A brand
+  // theme may instead derive both from the theme's own ink and paper, below.)
+  assert.match(tokenValue('--on-accent'), /^\d+ \d+% \d+%$/, 'the default label is an HSL triple');
+  assert.ok(!/--on-accent/.test(darkBlock()), 'a `.dark` block must not redefine --on-accent');
 });
 
 // ── Per-app brand themes ────────────────────────────────────────────────
@@ -165,74 +155,73 @@ function blockValue(selector, name) {
   return m[1].trim();
 }
 
-const BRANDS = ['solon'];
-const WHITE = [255, 255, 255];
-const LIGHT_PAGE = hslTripleToRgb('0 0% 97%');
-const DARK_PAGE = hslTripleToRgb('0 0% 7%');
-const UI_FLOOR = 3;
+const SOLON = `[data-brand='solon']`;
+const SOLON_DARK = `.dark[data-brand='solon']`;
 
-test('the page surfaces the brand ratios are measured on are the real ones', () => {
-  const light = /--surface-page\s*:\s*([^;]+);/.exec(css);
-  assert.equal(light && light[1].trim(), '0 0% 97%');
-  const dark = /--surface-page\s*:\s*([^;]+);/.exec(darkBlock());
-  assert.equal(dark && dark[1].trim(), '0 0% 7%');
-});
+/**
+ * Solon's resolved pairings in one theme. Its accent and label are the theme's
+ * own ink and paper (--text-primary, --text-inverted), so they are read from
+ * the theme's text tokens, exactly as the cascade resolves them.
+ * @param {'light' | 'dark'} theme
+ */
+function solon(theme) {
+  const scope = (/** @type {string} */ name) =>
+    theme === 'dark' ? blockValue('.dark', name) : tokenValue(name);
+  return {
+    accent: hslTripleToRgb(scope('--text-primary')),
+    label: hslTripleToRgb(scope('--text-inverted')),
+    page: hslTripleToRgb(scope('--surface-page')),
+    hover: hexToRgb(blockValue(theme === 'dark' ? SOLON_DARK : SOLON, '--accent-hover')),
+  };
+}
 
-test('Solon: the accent is #2f6fa0 and the default accent is still orange', () => {
-  assert.equal(blockValue(`[data-brand='solon']`, '--public-accent'), '#2f6fa0');
+test('the default accent is still OrangeCat and Loki orange', () => {
   assert.equal(tokenValue('--public-accent'), '#ff5c00', 'the default must not change');
 });
 
-test('Solon: white on the accent clears AA (5.38:1)', () => {
-  const accent = hexToRgb(blockValue(`[data-brand='solon']`, '--public-accent'));
-  const r = ratio(WHITE, accent);
-  assert.ok(r >= AA_NORMAL, `white on the Solon accent is ${r.toFixed(2)}:1, needs ${AA_NORMAL}`);
-  assert.ok(r > 5.3 && r < 5.5, `expected about 5.38:1, got ${r.toFixed(2)}`);
+test("Solon: the accent and its label are the theme's own ink and paper", () => {
+  assert.equal(blockValue(SOLON, '--public-accent'), 'hsl(var(--text-primary))');
+  assert.equal(blockValue(SOLON, '--on-accent'), 'var(--text-inverted)');
+  assert.ok(!/--public-accent|--on-accent/.test(block(SOLON_DARK)), 'derived, so no dark copy');
 });
 
-test('Solon: --on-accent is white and clears AA on the accent', () => {
-  const onAccent = blockValue(`[data-brand='solon']`, '--on-accent');
-  assert.deepEqual(hslTripleToRgb(onAccent).map(Math.round), WHITE);
-  const r = ratio(
-    hslTripleToRgb(onAccent),
-    hexToRgb(blockValue(`[data-brand='solon']`, '--public-accent')),
-  );
-  assert.ok(r >= AA_NORMAL, `the Solon label is ${r.toFixed(2)}:1`);
-});
+for (const theme of /** @type {const} */ (['light', 'dark'])) {
+  test(`Solon ${theme}: the accent is AA text on the page, and the label is AA on the accent`, () => {
+    const { accent, label, page } = solon(theme);
+    const onPage = ratio(accent, page);
+    const labelOnAccent = ratio(label, accent);
+    assert.ok(onPage >= AA_NORMAL, `accent on the ${theme} page is ${onPage.toFixed(2)}:1`);
+    assert.ok(labelOnAccent >= AA_NORMAL, `label on the accent is ${labelOnAccent.toFixed(2)}:1`);
+    // Measured when the theme was chosen: about 16:1 light, 15.7:1 dark.
+    assert.ok(onPage > 15, `expected about 16:1, got ${onPage.toFixed(2)}`);
+  });
 
-test('Solon: the accent is AA text on the light page and UI-grade on the dark page', () => {
-  const accent = hexToRgb(blockValue(`[data-brand='solon']`, '--public-accent'));
-  const onLight = ratio(accent, LIGHT_PAGE);
-  const onDark = ratio(accent, DARK_PAGE);
-  assert.ok(onLight >= AA_NORMAL, `accent on the light page is ${onLight.toFixed(2)}:1`);
-  assert.ok(onDark >= UI_FLOOR, `accent on the dark page is ${onDark.toFixed(2)}:1`);
-  // Pinned so nobody reads "it clears the UI floor" as "it is body text":
-  // it is not 4.5:1 on the dark page, so running text keeps --accent-text.
-  assert.ok(onDark < AA_NORMAL, `accent on the dark page is now ${onDark.toFixed(2)}:1`);
-});
+  test(`Solon ${theme}: the hover is pinned, steps toward the page and keeps the label at AA`, () => {
+    const { accent, label, page, hover } = solon(theme);
+    assert.equal(
+      blockValue(theme === 'dark' ? SOLON_DARK : SOLON, '--accent-hover'),
+      theme === 'dark' ? '#d4d4d4' : '#333333',
+    );
+    assert.ok(ratio(label, hover) >= AA_NORMAL, `label on the hover is ${ratio(label, hover)}`);
+    assert.ok(
+      Math.abs(luminance(hover) - luminance(page)) < Math.abs(luminance(accent) - luminance(page)),
+      'the hover must sit between the accent and the page',
+    );
+  });
+}
 
-test('Solon: the hovers are pinned and keep white at AA', () => {
-  const light = blockValue(`[data-brand='solon']`, '--accent-hover');
-  const dark = blockValue(`.dark[data-brand='solon']`, '--accent-hover');
-  assert.equal(light, '#285f8a');
-  assert.equal(dark, '#3374a8');
-  assert.ok(ratio(WHITE, hexToRgb(light)) >= AA_NORMAL);
-  assert.ok(ratio(WHITE, hexToRgb(dark)) >= AA_NORMAL);
-  // The dark hover is the lighter sibling, and it still stands off the dark page.
-  assert.ok(
-    luminance(hexToRgb(dark)) >
-      luminance(hexToRgb(blockValue(`[data-brand='solon']`, '--public-accent'))),
-  );
-  assert.ok(ratio(hexToRgb(dark), DARK_PAGE) >= UI_FLOOR);
-  // #3a84b8 is the line: white on it is 4.06:1.
-  assert.ok(ratio(WHITE, hexToRgb('#3a84b8')) < AA_NORMAL);
-});
-
-test('Solon: its mark is drawn in the Solon accent', async () => {
+test("Solon: its mark is the authorised owl, drawn in the fleet's near-white ink", async () => {
   const { MARKS } = await import('../marks/index.mjs');
+  const mark = MARKS.solon;
+  // One filled evenodd shape. This is the drawing that was authorised; change
+  // it deliberately (and update this) rather than by accident.
+  assert.equal(mark.shapes.length, 1);
+  assert.equal(mark.shapes[0].fillRule, 'evenodd');
+  assert.ok(mark.shapes[0].d.startsWith('M93.35 44.93 L92.93 42.94'));
   assert.equal(
-    String(MARKS.solon.iconInk).toLowerCase(),
-    blockValue(`[data-brand='solon']`, '--public-accent'),
+    mark.iconInk,
+    undefined,
+    'monochrome: the default icon ink, not a colour of its own',
   );
 });
 
