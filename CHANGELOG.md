@@ -5,6 +5,19 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.7.1
+
+- Solon's brand theme is monochrome, not blue: `data-brand="solon"` makes the
+  accent the theme's own ink (light) or paper (dark) and the label on it the
+  opposite, so Solon is not orange and not a colour of its own. This replaces
+  the `#2f6fa0` ink blue 1.7.0 shipped. Hover is `#333333` (light) and
+  `#d4d4d4` (dark). The default orange, `--bitcoin-orange` and the contrast
+  tests for them are unchanged.
+- Solon's owl is back to the authorised drawing (the disc with ring eyes,
+  brow and beak, as in 1.6.1). 1.7.0 replaced it with a redraw that was not
+  approved. The mark has no `iconInk`, so icons and the share card use the
+  fleet's near-white ink on the near-black tile.
+
 ## 1.7.0
 
 - Per-app brand themes: `data-brand="solon"` on `<html>` gives Solon its own
