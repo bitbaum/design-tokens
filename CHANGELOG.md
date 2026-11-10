@@ -5,6 +5,21 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## 1.7.0
+
+- Per-app brand themes: `data-brand="solon"` on `<html>` gives Solon its own
+  accent, a civic ink blue `#2f6fa0`, with a white `--on-accent` (5.38:1) and
+  hovers `#285f8a` (light) and `#3374a8` (dark). `:root` is unchanged, so
+  OrangeCat and Loki keep `#ff5c00`, and `--bitcoin-orange` is untouched.
+- `--public-glow-accent` is 10 % of the active accent instead of a hard-coded
+  orange, so Solon's glow is blue. Under the default it renders as before.
+- Solon's owl is redrawn as a mostly solid silhouette (ear tufts, small eye
+  holes, a beak notch) instead of a disc with large punched eyes and brow, so
+  it no longer reads as a pale, hollow face on a dark page or a photograph.
+  Its `iconInk` is `#2f6fa0`, not `#ff5c00`.
+- `test/contrast.test.js` pins the Solon pairings and keeps the default
+  "white is not a label on the orange" rule.
+
 ## 1.6.1
 
 - `marks:import` writes a valid registry for any fleet slug: a slug that

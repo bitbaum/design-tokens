@@ -123,7 +123,10 @@
   --font-display-weight: 400;
   --tracking-display: -0.015em;
 
-  /* — The one action colour across all three products. Theme-independent. — */
+  /* — The action colour: OrangeCat's and Loki's, and the default. ——————————
+     Theme-independent. A product with its own accent opts in with
+     `data-brand="<slug>"` on <html> (see BRAND THEMES below); without it
+     this orange is what every surface gets. */
   --public-accent: #ff5c00;
 
   /**
@@ -142,6 +145,10 @@
    * not flip between themes, so a label that flipped with the theme would be
    * unreadable in one of them — which is exactly why no existing text token
    * could be reused here (--text-primary inverts, this must not).
+   *
+   * This pairing belongs to the default (orange) accent. A brand theme whose
+   * accent is dark enough takes a white label instead; it is checked against
+   * its own accent in test/contrast.test.js.
    */
   --on-accent: 0 0% 8%;
 
@@ -275,7 +282,9 @@
    Only the values that actually differ. Faces, weights, tracking, geometry,
    rhythm, measures, --public-accent and --surface-public are theme-independent
    and are NOT repeated here — repeating them is how a theme drifts from its
-   own light counterpart.
+   own light counterpart. (The one exception is --accent-hover, which is a
+   light/dark pair: a hover that is darker than its accent on the light page
+   would sink into the dark one.)
    ══════════════════════════════════════════════════════════════════════════ */
 
 .dark {
@@ -319,6 +328,35 @@
   --status-negative: 0 75% 60%;
   --status-negative-subtle: 0 75% 60% / 0.12;
   --status-neutral: 0 0% 48%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BRAND THEMES
+   `:root` is OrangeCat's and Loki's orange. A product with its own accent puts
+   `data-brand="<slug>"` on <html> and takes only what differs here: the
+   accent, the label on it, and its hover. Everything else — faces, surfaces,
+   text, geometry — stays shared, so a brand is a handful of lines, not a fork.
+   These blocks sit after `.dark` on purpose: same specificity, later wins.
+   --accent-primary is restated because it was resolved from --public-accent
+   at :root, and a brand set on a descendant must not inherit the orange.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Solon — a civic ink blue, clearly not OrangeCat's orange.
+   #2f6fa0: white on it 5.38:1 (AA for text); on the light page 5.02:1; on the
+   dark page 3.48:1 (above the 3:1 UI floor, so the mark can be the accent in
+   both themes, but not 4.5:1 — running text keeps --accent-text, the theme's
+   ink). Hover: #285f8a (white 6.79:1) on light; #3374a8 (white 4.99:1,
+   3.75:1 on the dark page) on dark. Do not go as light as #3a84b8: white
+   falls to 4.06:1. The white label is theme-independent, like the accent. */
+[data-brand='solon'] {
+  --public-accent: #2f6fa0;
+  --accent-primary: var(--public-accent);
+  --accent-hover: #285f8a;
+  --on-accent: 0 0% 100%;
+}
+
+.dark[data-brand='solon'] {
+  --accent-hover: #3374a8;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -408,7 +446,9 @@ body {
   position: relative;
   isolation: isolate;
   background: hsl(var(--surface-public));
-  --public-glow-accent: rgb(255 92 0 / 0.1);
+  /* 10% of the active accent: the same rgb(255 92 0 / 0.1) for orange, blue
+     under a brand theme. */
+  --public-glow-accent: color-mix(in srgb, var(--public-accent) 10%, transparent);
   --public-grid-stroke: rgb(255 255 255 / 0.04);
   --public-grid-size: 80px;
 }
