@@ -269,13 +269,18 @@ variables. The glow behind `.public-backdrop` is 10 % of the active accent.
 | Brand | `data-brand` | Accent | Label | Hover (light / dark) |
 |---|---|---|---|---|
 | OrangeCat, Loki | none (the default) | `#ff5c00` | near-black (6.10:1) | `#e44d00` / `#ff7a33` |
-| Solon | `solon` | `#2f6fa0` | white (5.38:1) | `#285f8a` / `#3374a8` |
+| Solon | `solon` | the theme's ink / paper (`--text-primary`) | `--text-inverted` | `#333333` / `#d4d4d4` |
 
-Solon's accent is 5.02:1 on the light page and 3.48:1 on the dark page: AA for
-text on light, above the 3:1 floor for fills, icons and the mark on dark. It is
-not 4.5:1 as running text on dark, so body text keeps `--accent-text`.
-`test/contrast.test.js` pins each pairing. To add a brand, add its block after
-`.dark` in `tokens.css` and its pairings to that test.
+Solon is monochrome, in the register of SpaceX and xAI: its accent is near-black
+on the light theme and near-white on the dark one, and the label on it flips the
+other way. Ink on the light page is 16.25:1, paper on the dark page 15.71:1, the
+label on the accent 16.67:1 / 14.60:1, so the accent is AA for text as well as for
+fills and the mark. `test/contrast.test.js` pins each pairing.
+
+**Changing a brand's colour is one edit:** the `[data-brand='<slug>']` block in
+`tokens.css` (and, for a chromatic accent, the mark's `iconInk`), a release, and a
+version bump in the app. The app sets `data-brand` once and keeps no colour of its
+own. To add a brand, add its block after `.dark` and its pairings to that test.
 
 ## Marks
 
@@ -293,14 +298,8 @@ markSvg(solon, { size: 32, color: '#141414' }); // standalone <svg> markup
 iconSvg(solon); // the app-icon tile (mark in its iconInk on near-black)
 ```
 
-A mark is a filled silhouette with small punched details, so it reads the same
-on the light page, the dark page and a photograph. Solon's owl is `iconInk`
-`#2f6fa0`, the same as its brand accent.
-
-In React, draw `mark.shapes` as `<path>`s with `fill` or `stroke` set to
-`currentColor`. `motion` says how a mark may move when a hero asks for it:
-`draw`, `spin` (Loki's disc), `turn` (the shapes with a `turnAbout` point) or
-`none`. Chrome-sized marks never move.
+A mark with no `iconInk` is drawn in the fleet's near-white ink (`ICON_STYLE.ink`),
+as Loki's and Solon's are; OrangeCat's has its own.
 
 To replace a mark, or add one for a new product, export the logo as plain
 SVG (outlined text, flattened transforms) and run:
