@@ -127,7 +127,7 @@ Components declare **intent**, never mechanics.
 | `className="font-display"` | `font-display font-bold` | the display face has **one weight**; a synthesized bold looks cheap |
 | `className="bg-surface-base"` | `bg-[#1c1c1c]` | retheming must not require finding hex codes |
 | `className="text-accent"` | `text-[#ff5c00]` | one action colour, one definition |
-| `bg-accent text-on-accent` | `bg-accent text-white` | white on the accent is **3.10:1** and fails AA; the paired ink is 6.10:1 |
+| `bg-accent text-on-accent` | `bg-accent text-white` | white on the default orange is **3.10:1** and fails AA; the paired ink is 6.10:1 (a brand theme brings its own pair, see below) |
 | `className="tabular"` | — | numbers that change in place must not jitter |
 | `font-display` at ≥`text-2xl` | `font-display text-lg` | below 24px the high-contrast serif reads *lighter* than the body sans and hierarchy inverts |
 | `className="wordmark"` | `font-display` on the logo | uppercase + open tracking is the one small size a display serif survives |
@@ -250,6 +250,33 @@ Part of **[bitbaum](https://bitbaum.orangecat.ch)** — AI-native products on op
 infrastructure, built in Zürich. Every package here lists the apps that use it:
 **[which apps use design-tokens](https://bitbaum.orangecat.ch/packages/#design-tokens)**.
 
+## Brand themes
+
+`:root` is OrangeCat's and Loki's orange (`--public-accent: #ff5c00`, label
+`--on-accent` near-black). A product with its own accent puts
+`data-brand="<slug>"` on `<html>`, next to `class="dark"` if it pins a theme:
+
+```tsx
+<html lang="en" className="dark" data-brand="solon">
+```
+
+A brand sets only what differs (`--public-accent`, `--on-accent`,
+`--accent-hover`; `.dark[data-brand]` may give a lighter hover). Faces,
+surfaces, text and geometry stay shared. The Tailwind preset needs no change:
+`bg-accent`, `text-on-accent` and `hover:bg-accent-hover` read the same
+variables. The glow behind `.public-backdrop` is 10 % of the active accent.
+
+| Brand | `data-brand` | Accent | Label | Hover (light / dark) |
+|---|---|---|---|---|
+| OrangeCat, Loki | none (the default) | `#ff5c00` | near-black (6.10:1) | `#e44d00` / `#ff7a33` |
+| Solon | `solon` | `#2f6fa0` | white (5.38:1) | `#285f8a` / `#3374a8` |
+
+Solon's accent is 5.02:1 on the light page and 3.48:1 on the dark page: AA for
+text on light, above the 3:1 floor for fills, icons and the mark on dark. It is
+not 4.5:1 as running text on dark, so body text keeps `--accent-text`.
+`test/contrast.test.js` pins each pairing. To add a brand, add its block after
+`.dark` in `tokens.css` and its pairings to that test.
+
 ## Marks
 
 Every product's logo, as data, in `@bitbaum/design-tokens/marks`. A mark is
@@ -265,6 +292,10 @@ const solon = markFor('solon'); // null for a product with no mark yet
 markSvg(solon, { size: 32, color: '#141414' }); // standalone <svg> markup
 iconSvg(solon); // the app-icon tile (mark in its iconInk on near-black)
 ```
+
+A mark is a filled silhouette with small punched details, so it reads the same
+on the light page, the dark page and a photograph. Solon's owl is `iconInk`
+`#2f6fa0`, the same as its brand accent.
 
 In React, draw `mark.shapes` as `<path>`s with `fill` or `stroke` set to
 `currentColor`. `motion` says how a mark may move when a hero asks for it:
