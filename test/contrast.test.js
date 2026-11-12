@@ -153,6 +153,30 @@ for (const text of ['--text-secondary', '--text-tertiary']) {
   }
 }
 
+test('Bitcoin-orange TEXT clears AA on page, base and raised, light and dark', () => {
+  // --bitcoin-orange is 2.29:1 on white: BTC amounts on light cards were
+  // unreadable (orangecat.ch, 2026-11-12). Text takes --bitcoin-orange-text.
+  const lightText = hexToRgb(tokenValue('--bitcoin-orange-text'));
+  const darkText = hexToRgb(tokenValue('--bitcoin-orange')); // .dark points it here
+  assert.match(darkValue('--bitcoin-orange-text'), /var\(--bitcoin-orange\)/);
+  for (const surface of ['--surface-page', '--surface-base', '--surface-raised']) {
+    const light = ratio(lightText, hslTripleToRgb(tokenValue(surface)));
+    const dark = ratio(darkText, hslTripleToRgb(darkValue(surface)));
+    assert.ok(light >= AA_NORMAL, `light Bitcoin text on ${surface} is ${light.toFixed(2)}:1`);
+    assert.ok(dark >= AA_NORMAL, `dark Bitcoin text on ${surface} is ${dark.toFixed(2)}:1`);
+  }
+});
+
+test('light --status-positive text clears AA on page, base and raised', () => {
+  for (const surface of ['--surface-page', '--surface-base', '--surface-raised']) {
+    const r = ratio(
+      hslTripleToRgb(tokenValue('--status-positive')),
+      hslTripleToRgb(tokenValue(surface)),
+    );
+    assert.ok(r >= AA_NORMAL, `positive on ${surface} is ${r.toFixed(2)}:1`);
+  }
+});
+
 // ── Per-app brand themes ────────────────────────────────────────────────
 // `[data-brand="<slug>"]` on <html> replaces the accent for one product while
 // :root stays the OrangeCat/Loki orange. Every brand's pairings are pinned.
