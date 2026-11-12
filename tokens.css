@@ -196,8 +196,10 @@
   --accent-text: 0 0% 10%;
 
   /* Status — the only chromatic colours permitted outside the accent */
-  --status-positive: 145 60% 35%;
-  --status-positive-subtle: 145 60% 35% / 0.08;
+  /* 28%, not 35%: positive text (an "Active" pill, a gain) on its own tint
+     and on page/base/raised clears AA. 35% was 3.8:1 on the page. */
+  --status-positive: 145 60% 28%;
+  --status-positive-subtle: 145 60% 28% / 0.08;
   --status-warning: 38 92% 50%;
   --status-warning-subtle: 38 92% 50% / 0.08;
   --status-negative: 0 65% 50%;
@@ -251,6 +253,11 @@
   /* Bitcoin's own orange. Not a brand colour — it means "this is Bitcoin", so
      it is deliberately NOT --public-accent and must not be used for actions. */
   --bitcoin-orange: #f7931a;
+  /* Bitcoin orange AS TEXT (an amount, a "Bitcoin Balance" label). The orange
+     itself is 2.3:1 on white, so light text takes a deeper shade of it (4.98:1
+     on raised); the dark theme keeps the true orange (6.8:1 on raised).
+     Fills, icons on fills and borders keep --bitcoin-orange. */
+  --bitcoin-orange-text: #9d5906;
 
   /**
    * — Data maps ——————————————————————————————————————————————————————————
@@ -323,6 +330,7 @@
   --accent-text: 0 0% 92%;
 
   /* Status */
+  --bitcoin-orange-text: var(--bitcoin-orange);
   --status-positive: 145 55% 50%;
   --status-positive-subtle: 145 55% 50% / 0.12;
   --status-warning: 38 92% 60%;
