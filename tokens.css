@@ -177,7 +177,9 @@
   /* Text ramp */
   --text-primary: 0 0% 10%;
   --text-secondary: 0 0% 40%;
-  --text-tertiary: 0 0% 58%;
+  /* Tertiary is still text people read (dates, counts, hints), so it clears
+     WCAG AA 4.5:1 on page, base and raised. It was 58%: 2.8:1 on the page. */
+  --text-tertiary: 0 0% 44%;
   --text-muted: 0 0% 72%;
   --text-inverted: 0 0% 98%;
 
@@ -300,7 +302,7 @@
   /* Text ramp */
   --text-primary: 0 0% 92%;
   --text-secondary: 0 0% 65%;
-  --text-tertiary: 0 0% 48%;
+  --text-tertiary: 0 0% 55%; /* was 48%: 3.6:1 on raised */
   --text-muted: 0 0% 32%;
   --text-inverted: 0 0% 10%;
 

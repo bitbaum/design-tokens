@@ -125,6 +125,34 @@ test('--on-accent is one literal for the orange default and is never redefined i
   assert.ok(!/--on-accent/.test(darkBlock()), 'a `.dark` block must not redefine --on-accent');
 });
 
+// ── The text ramp people read ───────────────────────────────────────────
+// Secondary and tertiary text carry dates, counts, hints and captions in every
+// product. Tertiary sat at 2.8:1 on the light page and 3.6:1 on the dark
+// raised surface (measured on orangecat.ch, 2026-11-12). Muted is left out on
+// purpose: it is for disabled and decorative text, which AA exempts.
+
+/**
+ * A token's value inside the `.dark` block.
+ * @param {string} name
+ * @returns {string}
+ */
+function darkValue(name) {
+  const m = darkBlock().match(new RegExp(`${name}\\s*:\\s*([^;]+);`));
+  assert.ok(m, `${name} is not defined in .dark`);
+  return m[1].trim();
+}
+
+for (const text of ['--text-secondary', '--text-tertiary']) {
+  for (const surface of ['--surface-page', '--surface-base', '--surface-raised']) {
+    test(`${text} clears AA on ${surface}, light and dark`, () => {
+      const light = ratio(hslTripleToRgb(tokenValue(text)), hslTripleToRgb(tokenValue(surface)));
+      const dark = ratio(hslTripleToRgb(darkValue(text)), hslTripleToRgb(darkValue(surface)));
+      assert.ok(light >= AA_NORMAL, `light ${text} on ${surface} is ${light.toFixed(2)}:1`);
+      assert.ok(dark >= AA_NORMAL, `dark ${text} on ${surface} is ${dark.toFixed(2)}:1`);
+    });
+  }
+}
+
 // ── Per-app brand themes ────────────────────────────────────────────────
 // `[data-brand="<slug>"]` on <html> replaces the accent for one product while
 // :root stays the OrangeCat/Loki orange. Every brand's pairings are pinned.

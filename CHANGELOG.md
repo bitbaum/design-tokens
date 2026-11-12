@@ -5,6 +5,14 @@ linked below. Git commit dates are source dates, not inferred npm publication
 dates. A GitHub release does not itself establish npm publication.
 Application adoption and deployment evidence are tracked separately.
 
+## Unreleased
+
+- `--text-tertiary` clears WCAG AA (4.5:1) on page, base and raised in both
+  themes: 44% in light (was 58%, 2.8:1 on the page) and 55% in dark (was 48%,
+  3.6:1 on raised). `test/contrast.test.js` pins secondary and tertiary on
+  those three surfaces. `--text-muted` is unchanged: it is for disabled and
+  decorative text.
+
 ## 1.7.1
 
 - Solon's brand theme is monochrome, not blue: `data-brand="solon"` makes the
