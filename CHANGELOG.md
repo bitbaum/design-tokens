@@ -12,6 +12,13 @@ Application adoption and deployment evidence are tracked separately.
   3.6:1 on raised). `test/contrast.test.js` pins secondary and tertiary on
   those three surfaces. `--text-muted` is unchanged: it is for disabled and
   decorative text.
+- `--bitcoin-orange-text` (and the preset colour `bitcoin-text`): Bitcoin
+  orange for text. `--bitcoin-orange` is 2.29:1 on white, so BTC amounts on
+  light cards failed AA; light text takes `#9d5906` (4.98:1 on raised), dark
+  keeps the true orange. Fills, icons on fills and borders keep
+  `--bitcoin-orange`.
+- Light `--status-positive` 35% -> 28% (5.45:1 on raised; was 3.76:1), so an
+  "Active" pill and a gain read in the light theme. Dark is unchanged.
 
 ## 1.7.1
 

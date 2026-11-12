@@ -64,6 +64,8 @@ module.exports = {
         'on-accent': withAlpha('--on-accent'),
         // Bitcoin's own orange — means "this is Bitcoin", never an action.
         bitcoin: 'var(--bitcoin-orange)',
+        // The same orange as text: deeper in light so an amount reads (AA).
+        'bitcoin-text': 'var(--bitcoin-orange-text)',
         status: {
           positive: withAlpha('--status-positive'),
           warning: withAlpha('--status-warning'),
