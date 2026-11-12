@@ -176,10 +176,12 @@
 
   /* Text ramp */
   --text-primary: 0 0% 10%;
-  --text-secondary: 0 0% 40%;
+  --text-secondary: 0 0% 30%;
   /* Tertiary is still text people read (dates, counts, hints), so it clears
-     WCAG AA 4.5:1 on page, base and raised. It was 58%: 2.8:1 on the page. */
-  --text-tertiary: 0 0% 44%;
+     WCAG AA 4.5:1 on page, base, raised and overlay. It was 58% (2.8:1 on the
+     page), then 44% (4.32:1 on overlay). Secondary moved to 30% to keep a
+     visible step above it. OrangeCat measured these on 99 pages, 2026-11-12. */
+  --text-tertiary: 0 0% 42%;
   --text-muted: 0 0% 72%;
   --text-inverted: 0 0% 98%;
 
@@ -308,8 +310,8 @@
 
   /* Text ramp */
   --text-primary: 0 0% 92%;
-  --text-secondary: 0 0% 65%;
-  --text-tertiary: 0 0% 55%; /* was 48%: 3.6:1 on raised */
+  --text-secondary: 0 0% 72%;
+  --text-tertiary: 0 0% 58%; /* was 48% (3.6:1 on raised), then 55% (4.20:1 on overlay) */
   --text-muted: 0 0% 32%;
   --text-inverted: 0 0% 10%;
 

@@ -7,6 +7,12 @@ Application adoption and deployment evidence are tracked separately.
 
 ## Unreleased
 
+- Secondary and tertiary text also clear WCAG AA on `--surface-overlay`
+  (menus, popovers, sheets). Tertiary 44% -> 42% in light (was 4.32:1 on
+  overlay) and 55% -> 58% in dark (was 4.20:1); secondary 40% -> 30% in light
+  and 65% -> 72% in dark, so the two tones stay apart. These are the values
+  OrangeCat measured on 99 pages and ships (bitbaum/orangecat#1634).
+  `test/contrast.test.js` now checks overlay as well.
 - `--text-tertiary` clears WCAG AA (4.5:1) on page, base and raised in both
   themes: 44% in light (was 58%, 2.8:1 on the page) and 55% in dark (was 48%,
   3.6:1 on raised). `test/contrast.test.js` pins secondary and tertiary on
