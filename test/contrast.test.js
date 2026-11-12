@@ -143,7 +143,13 @@ function darkValue(name) {
 }
 
 for (const text of ['--text-secondary', '--text-tertiary']) {
-  for (const surface of ['--surface-page', '--surface-base', '--surface-raised']) {
+  // Overlay too: menus, popovers and sheets put the same small text on it.
+  for (const surface of [
+    '--surface-page',
+    '--surface-base',
+    '--surface-raised',
+    '--surface-overlay',
+  ]) {
     test(`${text} clears AA on ${surface}, light and dark`, () => {
       const light = ratio(hslTripleToRgb(tokenValue(text)), hslTripleToRgb(tokenValue(surface)));
       const dark = ratio(hslTripleToRgb(darkValue(text)), hslTripleToRgb(darkValue(surface)));
